@@ -1,0 +1,6 @@
+.Board {
+  text-align: center;
+  display: inline-block;
+  margin: 8px;
+  cursor: pointer;
+}
