@@ -15,16 +15,21 @@ import Element from '../Element/Element';
 import './Board.css';
 
 
-const Board = ({ element }) => {
+const Board = ({ setEtapa, setMove }) => {
 
   const [ signature, setSignature ] = useState('')
 
 
-  const play = (element) => {
-    HGame.makeMove({
+  const play = async (element) => {
+    await HGame.makeMove({
       card: element,
       signature: signature
     });
+    setMove({
+      card: element,
+      signature: signature
+    })
+    setEtapa(3)
   };
 
   const updateSignature = (e) => {

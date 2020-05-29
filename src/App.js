@@ -14,10 +14,15 @@ import Results from './components/Results/Results';
 const App = () => {
 
 const [ etapa, setEtapa ] = useState(1);
-
+const [ move, setMove ] = useState(null);
 
 const enterGame = () => {
   setEtapa(2)
+}
+
+const restartGame = () => {
+  setEtapa(1)
+  setMove(null)
 }
 
 return (
@@ -29,11 +34,15 @@ return (
     }
     {
       etapa === 2 && 
-      <Board />
+      <Board 
+        setEtapa={setEtapa} 
+        setMove={setMove} />
     }
     {
       etapa === 3 &&
-      <Results />
+      <Results 
+        move={move}
+        restartGame={restartGame}/>
     }
     </div>
   </div>

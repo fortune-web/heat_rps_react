@@ -6,16 +6,20 @@ import React, {
   useLayoutEffect,
 } from 'react';
 
+// Components
+import Element from '../Element/Element';
+
 import './Results.css';
 
 
-const Results = ({ element }) => {
-
-
+const Results = ({ move, restartGame }) => {
 
   return (
     <div className="Results">
-      RESULTS
+      <p>YOU HAVE CHOOSEN</p>
+      <Element element={move.card} />
+      <p>Awaiting for the other player</p>
+      <input type="button" value="Play again" onClick={()=>restartGame()} />
     </div>
   );
 }
