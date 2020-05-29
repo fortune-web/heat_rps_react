@@ -31,13 +31,23 @@ const Board = ({ element }) => {
     setSignature(e.target.value)
   }
 
+  const generatePassword = (length) => {
+    var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
+}
+
   useEffect(() => {
-    signature = Math.random(12348).toHex()
+    setSignature(generatePassword(14))
   }, [])
 
 
   return (
     <div className="Board">
+    <p>Password to encrypt your move (you can change it)</p>
     <input type="text" value={ signature } onChange={ updateSignature }/>
     <p>Select rock, paper or scissor</p>
       <Element element='rock' play={play} />
