@@ -5,23 +5,36 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from 'react';
-import logo from './logo.svg';
+
+import {config} from './config.js';
+
 import './App.css';
 import Lobby from './components/Lobby/Lobby';
 import Board from './components/Board/Board';
+import Waiting from './components/Waiting/Waiting';
 import Results from './components/Results/Results';
+
 
 const App = () => {
 
-const [ etapa, setEtapa ] = useState(1);
-const [ move, setMove ] = useState(null);
 
+const [ stage, setStage ] = useState(1);
+const [ move, setMove ] = useState(null);
+const [ response, setResponse ] = useState(null);
+const [ accounts, setAccounts ] = useState({
+  name: config.ACCOUNT.NAME,
+  secret: config.ACCOUNT.SECRET,
+  id: config.ACCOUNT.ID,
+  opponent: config.ACCOUNT.OPPONENT
+})
+
+console.log("CONFIG:", process.env)
 const enterGame = () => {
-  setEtapa(2)
+  setStage(config.stages.START) // 2
 }
 
 const restartGame = () => {
-  setEtapa(1)
+  setStage(config.stages.LOBBY) // 1
   setMove(null)
 }
 
@@ -29,20 +42,36 @@ return (
   <div className="App">
     <div className="container">
     {
-      etapa === 1 && 
-      <Lobby enterGame={enterGame}/>
+      stage === 1 && 
+      <Lobby 
+        enterGame={enterGame}
+        accounts={accounts}
+        
+      />
     }
     {
-      etapa === 2 && 
+      stage === 2 && 
       <Board 
-        setEtapa={setEtapa} 
-        setMove={setMove} />
+        setStage={setStage} 
+        setMove={setMove}
+        accounts={accounts}  
+      />
     }
     {
-      etapa === 3 &&
+      stage === 3 &&
+      <Waiting 
+        move={move}
+        setStage={setStage} 
+        setResponse={setResponse}
+        accounts={accounts}  
+      />
+    }
+    {
+      stage === 4 &&
       <Results 
         move={move}
-        restartGame={restartGame}/>
+        restartGame={restartGame}
+      />
     }
     </div>
   </div>
