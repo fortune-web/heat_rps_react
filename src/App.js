@@ -58,21 +58,17 @@ return (
       />
     }
     {
-      stage === 3 &&
+      stage >= 3 &&
       <Waiting 
         move={move}
+        stage={stage}
         setStage={setStage} 
+        response={response}
         setResponse={setResponse}
         accounts={accounts}  
       />
     }
-    {
-      stage === 4 &&
-      <Results 
-        move={move}
-        restartGame={restartGame}
-      />
-    }
+
     </div>
   </div>
 );
