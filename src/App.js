@@ -37,8 +37,9 @@ const enterGame = (player) => {
 }
 
 const restartGame = () => {
-  setStage(config.stages.LOBBY) // 1
+  setResponse(null)
   setMove(null)
+  setStage(config.stages.LOBBY) // 1
 }
 
 return (

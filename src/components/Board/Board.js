@@ -21,7 +21,7 @@ import crypto from 'crypto';
 const Board = ({ stage, setStage, move, setMove, accounts, player }) => {
 
   const [ password, setPassword ] = useState('')
-
+  var refSubscriber = useRef(null)
 
   const play = async (element) => {
 
@@ -112,7 +112,10 @@ const Board = ({ stage, setStage, move, setMove, accounts, player }) => {
           player1Move: message.move
         })
       }
-
+      if (refSubscriber) {
+        refSubscriber.close()
+        refSubscriber = null
+      }
     }
   }
 
@@ -128,7 +131,9 @@ const Board = ({ stage, setStage, move, setMove, accounts, player }) => {
 
   useEffect(() => {
     if (player === 1) setPassword(generatePassword(14))
-    if (player === 2) HGame.subscribe('messages', waitForPlayer1)
+    if (player === 2) {
+      refSubscriber = HGame.subscribe('messages', waitForPlayer1)
+    }
   }, [])
 
 

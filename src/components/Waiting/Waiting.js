@@ -25,12 +25,14 @@ const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, ac
   const [ value1, setValue1 ] = useState()
   const [ value2, setValue2 ] = useState()
 
+  var refSubscriber = useRef(null)
   /*
   * function getMessage
   * Receives message from blockchain for the opponent move
  */
   const getMessage = async (m) => {
 
+    console.log("THIS:", this)
     console.log("MESSAGE:", m)
     console.log("MOVE:", move)
     console.log("ACC:", accounts)
@@ -46,12 +48,16 @@ const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, ac
 
       if ( player === 2 && data.password) {
         // Decrypt move previously received with the password recently received
-        message = HGame.aesDecrypt(move.player1Move, data.password)
-        setResponse({
-          card: message,
-          password: data.password
-        })
-        setStage(config.stages.RESULTS)
+        try {
+          message = HGame.aesDecrypt(move.player1Move, data.password)
+          setResponse({
+            card: message,
+            password: data.password
+          })
+          setStage(config.stages.RESULTS)
+        } catch(e) {
+          console.log(e)
+        }
       }
 
       if ( player === 1 ) {
@@ -101,10 +107,15 @@ const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, ac
     //  }
 
     }
+
+    if (refSubscriber) {
+      refSubscriber.close()
+      refSubscriber = null
+    }
   } 
 
   useEffect(() => {
-    HGame.subscribe('messages', getMessage)
+    refSubscriber = HGame.subscribe('messages', getMessage)
   }, [])
 
 
