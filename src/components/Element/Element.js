@@ -23,7 +23,7 @@ const Element = ({ element, play }) => {
 
   return (
     <div className="Element">
-      <img src={image} className={element==='?' ? 'gray' : ''} onClick={()=>play(element)}/>
+      <img src={image} alt={element.toUpperCase()} name={element.toUpperCase()} className={element==='?' ? 'gray' : ''} onClick={()=>play(element)}/>
     </div>
   );
 }

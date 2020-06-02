@@ -137,11 +137,11 @@ const Board = ({ stage, setStage, move, setMove, accounts, player }) => {
     { player === 1 &&
     <div>
     <p>Password to encrypt your move (you can change it)</p>
-    <input type="text" value={ password } onChange={ updatePassword }/>
+    <input type="text" value={ password } onChange={ (e) => updatePassword(e) }/>
     </div>
     }
     {
-      player === 2 && stage !== config.stages.WAITING_FOR_FIRST &&
+      player === 2 && stage === config.stages.START && !move &&
       <div>
       <p>WAITING FOR PLAYER 1 TO MOVE...</p>
       </div>
@@ -149,7 +149,7 @@ const Board = ({ stage, setStage, move, setMove, accounts, player }) => {
     {
       player === 2 && move && move.player1Move && 
     <div>
-    <p>Player 1 moved!</p>
+    <p>PLAYER 1 MOVED!</p>
     <Element element='?' />
     <p>Encrypted move:</p>
     <p><strong>{move.player1Move}</strong></p>

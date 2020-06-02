@@ -46,7 +46,7 @@ const changeAccount = (acc) => {
       <input placeholder="Secret phrase" id="secret" type="text" className="inpSecret" value={accounts.secret || ''} />
       <p>Opponent id</p>
       <p>
-      <input placeholder="id" id="opponentId" type="text" class="inpname" value={accounts.opponent || ''} />
+      <input placeholder="id" id="opponentId" type="text" className="inpName" value={accounts.opponent || ''} />
       </p>   
       <p><input type="button" onClick={() => enterGame(1)} value="PLAYER 1" /></p>
       <p><input type="button" onClick={() => enterGame(2)} value="PLAYER 2" /></p>

@@ -21,6 +21,9 @@ import crypto from 'crypto';
 const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, accounts, player }) => {
 
   const [ winner, setWinner ] = useState(null)
+  const [ decryptResult, setDecryptResult ] = useState(null)
+  const [ value1, setValue1 ] = useState()
+  const [ value2, setValue2 ] = useState()
 
   /*
   * function getMessage
@@ -105,8 +108,34 @@ const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, ac
   }, [])
 
 
+  useEffect(() => {
+    if (move && move.player1Move) setValue1(move.player1Move)
+  }, [move])
+
+  useEffect(() => {
+    if (response && response.password) setValue2(response.password)
+  }, [response])
 
 
+  const tryDecrypt = () => {
+    let message = document.getElementById('value1').value
+    let password = document.getElementById('value2').value
+    try {
+      let decrypt = HGame.aesDecrypt(message, password)
+      setDecryptResult(decrypt)
+    } catch(e) {
+      setDecryptResult("ERROR")
+    }  
+  }
+  
+
+  const update1 = (e) => {
+    setValue1(e.target.value)
+  }
+
+  const update2 = (e) => {
+    setValue2(e.target.value)
+  }
 
   return (
     <div className="Waiting">
@@ -166,13 +195,23 @@ const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, ac
       </div>
 
       {
-        stage === config.stages.FINISHED && 
+        stage === config.stages.RESULTS && 
         <div>
         {
           player === 1 && 
         <p>PASSWORD SENT TO OPPONENT</p>
         }
-        <input type="button" value="Play again" onClick={()=>restartGame()} />
+        {
+          player === 2 &&
+          <div>
+          <p>Criptographic comprobation</p>
+          <input type="text" id="value1" value={value1} onChange={(e)=>update1(e)}/>
+          <input type="text" id="value2" value={value2} onChange={(e)=>update2(e)}/>
+          <input type="button" value="Decrypt" onClick={() => tryDecrypt()} />
+          <p><strong>{decryptResult}</strong></p>
+          </div>
+        }
+        <input type="button" value="Play again" onClick={() => restartGame()} />
         </div>
 
       }
