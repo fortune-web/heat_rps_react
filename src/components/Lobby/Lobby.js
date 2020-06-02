@@ -48,8 +48,6 @@ const updateAccount = () => {
     <div className="Lobby">
       <h1>LOBBY</h1>
 
-      <p><input type="button" onClick={() => changeAccount(1)} value="SET ACCOUNT 1" /><br /><input type="button" onClick={() => changeAccount(2)} value="SET ACCOUNT 2" /></p>
-
       <p>Player 1</p>
       <p>
       <input placeholder="Account Name (email)" id="name" type="text" className="inpName" onChange={()=>updateAccount()} value={accounts.name || ''} />
