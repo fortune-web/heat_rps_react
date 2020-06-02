@@ -37,16 +37,14 @@ const changeAccount = (acc) => {
     <div className="Lobby">
       <h1>LOBBY</h1>
 
-      <p><input type="button" onClick={() => changeAccount(1)} value="SET ACCOUNT 1" /><br /><input type="button" onClick={() => changeAccount(2)} value="SET ACCOUNT 2" /></p>
-
       <p>Player 1</p>
       <p>
-      <input placeholder="Account Name (email)" id="name" type="text" className="inpName" value={accounts.name || ''} />
+      <input placeholder="Account Name (email)" id="name" type="text" className="inpName"  />
       </p>
-      <input placeholder="Secret phrase" id="secret" type="text" className="inpSecret" value={accounts.secret || ''} />
+      <input placeholder="Secret phrase" id="secret" type="text" className="inpSecret"  />
       <p>Opponent id</p>
       <p>
-      <input placeholder="id" id="opponentId" type="text" className="inpName" value={accounts.opponent || ''} />
+      <input placeholder="id" id="opponentId" type="text" className="inpName"  />
       </p>   
       <p><input type="button" onClick={() => enterGame(1)} value="PLAYER 1" /></p>
       <p><input type="button" onClick={() => enterGame(2)} value="PLAYER 2" /></p>
