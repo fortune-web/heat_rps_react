@@ -33,18 +33,31 @@ const changeAccount = (acc) => {
   }
 }
 
+const updateAccount = () => {
+    setAccounts(
+      {
+        name: document.getElementById('name').value,
+        secret: document.getElementById('secret').value,
+        id: '',
+        opponent: document.getElementById('opponentId').value
+      })
+}
+
+
   return (
     <div className="Lobby">
       <h1>LOBBY</h1>
 
+      <p><input type="button" onClick={() => changeAccount(1)} value="SET ACCOUNT 1" /><br /><input type="button" onClick={() => changeAccount(2)} value="SET ACCOUNT 2" /></p>
+
       <p>Player 1</p>
       <p>
-      <input placeholder="Account Name (email)" id="name" type="text" className="inpName"  />
+      <input placeholder="Account Name (email)" id="name" type="text" className="inpName" onChange={()=>updateAccount()} value={accounts.name || ''} />
       </p>
-      <input placeholder="Secret phrase" id="secret" type="text" className="inpSecret"  />
+      <input placeholder="Secret phrase" id="secret" type="text" className="inpSecret" onChange={()=>updateAccount()} value={accounts.secret || ''} />
       <p>Opponent id</p>
       <p>
-      <input placeholder="id" id="opponentId" type="text" className="inpName"  />
+      <input placeholder="id" id="opponentId" type="text" className="inpName" onChange={()=>updateAccount()} value={accounts.opponent || ''} />
       </p>   
       <p><input type="button" onClick={() => enterGame(1)} value="PLAYER 1" /></p>
       <p><input type="button" onClick={() => enterGame(2)} value="PLAYER 2" /></p>
