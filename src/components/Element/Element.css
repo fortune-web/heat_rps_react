@@ -31,6 +31,10 @@
   color: #61dafb;
 }
 
+.gray {
+  opacity:.6;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

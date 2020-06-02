@@ -20,6 +20,7 @@ const App = () => {
 
 const [ stage, setStage ] = useState(1);
 const [ move, setMove ] = useState(null);
+const [ player, setPlayer ] = useState(null);
 const [ response, setResponse ] = useState(null);
 const [ accounts, setAccounts ] = useState({
   name: config.ACCOUNT.NAME,
@@ -29,7 +30,9 @@ const [ accounts, setAccounts ] = useState({
 })
 
 console.log("CONFIG:", process.env)
-const enterGame = () => {
+
+const enterGame = (player) => {
+  setPlayer(player)
   setStage(config.stages.START) // 2
 }
 
@@ -42,30 +45,35 @@ return (
   <div className="App">
     <div className="container">
     {
-      stage === 1 && 
+      stage === config.stages.LOBBY && // 1
       <Lobby 
         enterGame={enterGame}
         accounts={accounts}
-        
+        setAccounts={setAccounts}
       />
     }
     {
-      stage === 2 && 
+      stage === config.stages.START && // 2
       <Board 
+        stage={stage}
         setStage={setStage} 
+        move={move}
         setMove={setMove}
         accounts={accounts}  
+        player={player}
       />
     }
     {
-      stage >= 3 &&
+      stage >= config.stages.WAITING_FOR_FIRST && // 3
       <Waiting 
         move={move}
         stage={stage}
         setStage={setStage} 
         response={response}
         setResponse={setResponse}
+        restartGame={restartGame}
         accounts={accounts}  
+        player={player}
       />
     }
 

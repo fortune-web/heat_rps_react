@@ -18,7 +18,7 @@ import { config } from '../../config.js';
 import crypto from 'crypto';
 
 
-const Waiting = ({ move, stage, setStage, response, setResponse, accounts }) => {
+const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, accounts, player }) => {
 
   const [ winner, setWinner ] = useState(null)
 
@@ -29,24 +29,39 @@ const Waiting = ({ move, stage, setStage, response, setResponse, accounts }) => 
   const getMessage = async (m) => {
 
     console.log("MESSAGE:", m)
-
-    if (m && m.recipient === accounts.id) {
+    console.log("MOVE:", move)
+    console.log("ACC:", accounts)
+    if ((m && m.sender === accounts.id && m.recipient === accounts.opponent) || 
+      (m && m.recipient === accounts.id && m.sender === accounts.opponent)) {
 
       let message
+      let data = await HGame.readMessage(m, accounts.secret)
+      data = JSON.parse(data)
 
-      if ( m.messageIsEncrypted ) {
-        let data = await HGame.decryptMessage(m, accounts)
-        message = data.message
-      } else {
-        message = HGame.hex2a(m.messageBytes)
+      console.log("CARD:", move.player1Move)
+      console.log("MESSAGE:", data)
+
+      if ( player === 2 && data.password) {
+        // Decrypt move previously received with the password recently received
+        message = HGame.aesDecrypt(move.player1Move, data.password)
+        setResponse({
+          card: message,
+          password: data.password
+        })
+        setStage(config.stages.RESULTS)
       }
-      console.log("CARD:", move.card)
-      console.log("MOVE:", message)
+
+      if ( player === 1 ) {
+        message = data.move
+      }
 
       if ( message === "rock" || message === "paper" || message === "scissor") {
-        setResponse({
-          card: message
-        })
+
+        if (player === 1) {
+          setResponse({
+            card: message
+          })
+        }
 
         if (move.card === message) {
           setWinner("DRAW!")
@@ -65,26 +80,23 @@ const Waiting = ({ move, stage, setStage, response, setResponse, accounts }) => 
         ) {
           setWinner("YOU LOSE!")
         }
-        setStage(config.stages.RESULTS)
+        
 
-        const vars = {
-          card: move.signature,
-          account: accounts,
-          opponent: accounts.opponent,
+        if (player === 1) {
+          const vars = {
+            card: JSON.stringify({password: move.password}),
+            account: accounts,
+            opponent: accounts.opponent,
+          }
+          console.log("VARS:", vars)
+          const data = await HGame.makeMove(vars);
+          console.log("SENT:", data)
         }
 
-        console.log("VARS:", vars)
-
-        const data = await HGame.makeMove(vars);
-
-        console.log("SENT:", data)
-
-        if ( data && data.bradcasted ) {
-          setStage(config.stages.FINISHED)
-        }
-
+      setStage(config.stages.RESULTS)
       }
- 
+    //  }
+
     }
   } 
 
@@ -99,26 +111,53 @@ const Waiting = ({ move, stage, setStage, response, setResponse, accounts }) => 
   return (
     <div className="Waiting">
       <div>
+
+      { player === 1 &&
         <div className="cell">
           <p>YOUR MOVE</p>
           <Element element={move.card} />
           <p>Your encrypted move:</p>
-          <p>{move.message}</p>
+          <p>{JSON.parse(move.message).move}</p>
           <p>Your password:</p>
-          <p>{move.signature}</p>
+          <p>{move.password}</p>
         </div>
+      }
+
+      {
+        player === 2 &&
+        <div className="cell">
+          <p>OPPONENT MOVE</p>
+          <Element element={(response && response.card) ? response.card : move.player1Move} />
+          <p>His/her encrypted move:</p>
+          <p>{move.player1Move}</p>
+          {
+            response && response.password && 
+            <div>
+            <p>His/her password:</p>
+            <p>{response.password}</p>
+            </div>
+          }
+        </div>
+      }
         <div className="cell">
         {
-          stage >= config.stages.RESULTS && 
+          stage >= config.stages.RESULTS && player === 1 &&
           <div>
-            <p>OPPONENT MOVED</p>
+            <p>OPPONENT MOVE</p>
             <Element element={response.card} />
+          </div>
+        }
+        {
+          stage >= config.stages.RESULTS && player === 2 &&
+          <div>
+            <p>YOU MOVED</p>
+            <Element element={move.card} />
           </div>
         }
         </div>
       </div>
       <div>
-        { stage < config.stages.RESULTS &&
+        { player === 1 && stage < config.stages.RESULTS &&
           <p>Awaiting for the other player</p>
         }
         { stage >= config.stages.RESULTS &&
@@ -129,10 +168,16 @@ const Waiting = ({ move, stage, setStage, response, setResponse, accounts }) => 
       {
         stage === config.stages.FINISHED && 
         <div>
-        PASSWORD SENT TO OPPONENT
+        {
+          player === 1 && 
+        <p>PASSWORD SENT TO OPPONENT</p>
+        }
+        <input type="button" value="Play again" onClick={()=>restartGame()} />
         </div>
 
       }
+
+
     </div>
   );
 }
