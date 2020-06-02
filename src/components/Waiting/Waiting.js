@@ -34,8 +34,8 @@ const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, ac
     console.log("MESSAGE:", m)
     console.log("MOVE:", move)
     console.log("ACC:", accounts)
-    if ((m && m.sender === accounts.id && m.recipient === accounts.opponent) || 
-      (m && m.recipient === accounts.id && m.sender === accounts.opponent)) {
+    if ((m && m.recipient === accounts.opponent) || 
+      (m && m.sender === accounts.opponent)) {
 
       let message
       let data = await HGame.readMessage(m, accounts.secret)
@@ -187,7 +187,7 @@ const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, ac
       </div>
       <div>
         { player === 1 && stage < config.stages.RESULTS &&
-          <p>Awaiting for the other player</p>
+          <p><strong>Awaiting for the other player</strong></p>
         }
         { stage >= config.stages.RESULTS &&
           <p><strong>{winner}</strong></p>

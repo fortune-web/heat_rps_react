@@ -101,7 +101,7 @@ const Board = ({ stage, setStage, move, setMove, accounts, player }) => {
 
   const waitForPlayer1 = async (m) => {
 
-    if (m && m.recipient === accounts.id && m.sender === accounts.opponent) {
+    if (m && m.sender === accounts.opponent) {
 
       let message = await HGame.readMessage(m, accounts.secret)
       console.log("RECEIVED:", message)
