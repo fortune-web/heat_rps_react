@@ -5,10 +5,10 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from 'react';
-import rock  from './images/rock.png'
-import paper from './images/paper.png'
-import scissor from './images/scissor.png'
-import question from './images/question.png'
+import rock  from './images/set2/rock.png'
+import paper from './images/set2/paper.png'
+import scissor from './images/set2/scissor.png'
+import question from './images/set2/question.png'
 import './Element.css';
 
 
