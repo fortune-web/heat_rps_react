@@ -14,6 +14,12 @@
 
 }
 
+
+.selectInfo {
+	margin-top:28px;
+	transform:scale(1.2);
+}
+
 .listItem {
 	padding: 2px 12px;
     line-height: 20pt;

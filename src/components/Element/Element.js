@@ -12,7 +12,7 @@ import question from './images/set2/question.png'
 import './Element.css';
 
 
-const Element = ({ element, play }) => {
+const Element = ({ element, play, active }) => {
 
   let image
   if (element == 'rock') image = rock
@@ -22,7 +22,7 @@ const Element = ({ element, play }) => {
   if (element === '?') image = question
 
   return (
-    <div className="Element">
+    <div className={active ? 'activeCard' : 'card'}>
       <img src={image} alt={element.toUpperCase()} name={element.toUpperCase()} className={element==='?' ? 'gray' : element} onClick={()=>play(element)}/>
     </div>
   );

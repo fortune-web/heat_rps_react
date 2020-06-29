@@ -21,7 +21,15 @@ import { stages } from '../../config.js';
 import crypto from 'crypto';
 
 
-const Board = ({ stage, setStage, game, setGame, move, setMove, account, player }) => {
+const Board = ({ 
+  stage, setStage, 
+  game, setGame, 
+  moves, setMoves,
+  round, setRound,
+  opponentMoves, setOpponentMoves, 
+  account, 
+  player
+}) => {
 
   const [ password, setPassword ] = useState('')
   var refSubscriber = useRef(null)
@@ -30,7 +38,7 @@ const Board = ({ stage, setStage, game, setGame, move, setMove, account, player 
 
     if ( element === '?' ) return
 
-    if ( player === 1 ) {
+    if ( player === 2 ) {
       let message = HGame.aesEncrypt(element, password)
       message = JSON.stringify({
         move: message
@@ -38,7 +46,7 @@ const Board = ({ stage, setStage, game, setGame, move, setMove, account, player 
       const vars = {
         card: message,
         account: account,
-        opponent: account.opponent,
+        opponent: game.opponent,
       }
       console.log("VARS:", vars)
 
@@ -52,13 +60,17 @@ const Board = ({ stage, setStage, game, setGame, move, setMove, account, player 
 
       if ( data && data.broadcasted ) {
         // Success, move sent
-        setMove({
-          ...move,
+        let _moves = moves;
+        _moves.push({
           card: element,
           password,
           message
         })
-
+        setMoves(_moves)
+        setGame({
+          ...game,
+          current_round: game.current_round + 1
+        })
 
         const params = {
           game_id: game.id,
@@ -66,9 +78,9 @@ const Board = ({ stage, setStage, game, setGame, move, setMove, account, player 
           move: message,
           password: password,
           round: game.current_round,
-          player
+          player,
+          blockchain_hash: data.fullHash
         }
-
 
         httpClient.apiPost('move', {
           params, 
@@ -80,8 +92,6 @@ const Board = ({ stage, setStage, game, setGame, move, setMove, account, player 
           }
         })
 
-        setStage(stages.WAITING_FOR_SECOND) // 4
-
 
       } else {
         // Failure
@@ -89,54 +99,21 @@ const Board = ({ stage, setStage, game, setGame, move, setMove, account, player 
         return
       }
 
-    }
-
-    if ( player === 2 ) {
-
-      const vars = {
-        card: JSON.stringify({move: element}),
-        account: account,
-        opponent: player === 1 ? game.opponent : game.account_id,
-      }
-
-      console.log("VARS:", vars)
-
-      const data = await HGame.makeMove(vars);
-      console.log("DATA:", data)
-
-      if ( data && data.errorCode ) {
-        alert(data.errorDescription)
-        return
-      }
-
-      if ( data && data.broadcasted ) {
-        // Success, move sent
-        setMove({
-          ...move,
-          card: element,
-          password: null,
-          message: element
-        })
-
-      } else {
-        // Failure
-        alert("There was an error trying to broadcast the move")
-        return
-      }
     }
 
   }
 
   const waitForPlayer1 = async (m) => {
-console.log("M:", m)
+
+    console.log("M:", m)
+
     if (m && m.sender === account.opponent) {
 
       let message = await HGame.readMessage(m, account.secret)
       console.log("RECEIVED:", message)
       message = JSON.parse(message)
       if (!message.password) {
-        setMove({
-          ...move,
+        setOpponentMoves({
           player1Move: message.move
         })
       }
@@ -164,7 +141,7 @@ console.log("M:", m)
 
   }, [game.round])
 
-
+  console.log("MOVES:", moves)
   return (
     <div className="Board">
 
@@ -196,12 +173,31 @@ console.log("M:", m)
         <h1>Make your move</h1>
 
         <div className="selectInfo">
-          <Element element='rock' play={play} />
-          <Element element='paper' play={play} />
-          <Element element='scissor' play={play} />
+          <Element element='rock' play={play} active={true} />
+          <Element element='paper' play={play} active={true} />
+          <Element element='scissor' play={play} active={true} />
           <p>Select rock, paper or scissor</p>
         </div>
 
+        <div className="movesInfo">
+        {
+          moves.map((move, key) => {
+            return(
+              <div className="gameInfo" key={key}>
+                <div className="listItem">
+                  <span className="listName">YOUR MOVE</span>
+                  <Element element={move.card}  active={false}
+                  key={key}/>
+                </div>
+                <div className="listItem">
+                  <span className="listName">OPPONENT MOVE</span>
+                  <Element element={opponentMoves[game.current_round-1]} />
+                </div>
+              </div>   
+            )
+          })
+        }
+        </div>
 
         { 1==2 &&
         <div className="passwordInfo">

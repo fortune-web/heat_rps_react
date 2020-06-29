@@ -19,7 +19,8 @@ import Results from './components/Results/Results';
 const App = () => {
 
   const [ stage, setStage ] = useState(stages.LOGIN);
-  const [ move, setMove ] = useState(null);
+  const [ moves, setMoves ] = useState([]);
+  const [ opponentMoves, setOpponentMoves ] = useState([]);
   const [ player, setPlayer ] = useState(null);
   const [ game, setGame ] = useState({});
   const [ response, setResponse ] = useState(null);
@@ -47,7 +48,7 @@ const App = () => {
 
   const restartGame = () => {
     setResponse(null)
-    setMove(null)
+    setMoves([])
     setStage(stages.LOBBY) // 1
   }
 
@@ -81,7 +82,10 @@ const App = () => {
           setStage={setStage} 
           game={game}
           setGame={setGame}
-          setMove={setMove}
+          moves={moves}
+          setMoves={setMoves}
+          opponentMoves={opponentMoves} 
+          setOpponentMoves={setOpponentMoves}
           account={account}  
           player={player}
         />
@@ -89,7 +93,7 @@ const App = () => {
       {
         stage >= stages.WAITING_FOR_FIRST && // 3
         <Waiting 
-          move={move}
+          moves={moves}
           stage={stage}
           setStage={setStage} 
           response={response}
