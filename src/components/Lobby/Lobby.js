@@ -6,61 +6,89 @@ import React, {
   useLayoutEffect,
 } from 'react';
 
+import httpClient from '../../helpers/axios';
+
+import Bet from '../Bet/Bet';
+
 import './Lobby.css';
 import { config } from '../../config.js';
 
-const Lobby = ({ enterGame, accounts, setAccounts }) => {
+const Lobby = ({ enterGame, account, bets, setBets }) => {
+
+  useEffect(() => {
+
+    httpClient.apiGet('bets', {
+      params: {
+      }, 
+    }).then(({ data }) => {
+      if(data && data.length) {
+        setBets(data)
+      } else {
+        alert("CONNECTION ERROR")
+      }
+    })
+
+  }, [])
 
 
-const changeAccount = (acc) => {
+const createGame = async () => {
 
-  if ( acc === 2 ) {
-    setAccounts(
-      {
-        name: config.ACCOUNT2.NAME,
-        secret: config.ACCOUNT2.SECRET,
-        id: config.ACCOUNT2.ID,
-        opponent: config.ACCOUNT2.OPPONENT
+    const params = {
+      amount: document.getElementById('amount').value,
+      rounds: document.getElementById('rounds').value,
+      account_id: account.id
+    }
+    
+    const formData = new FormData()
+    formData.append('amount', params.amount)
+    formData.append('rounds', params.rounds)
+    formData.append('acount_id', params.account_id)
+
+    console.log("PREVBET:", params)
+    const resp = await fetch('http://localhost:3010/bet', {
+      method: 'POST',
+      body: JSON.stringify(params),
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    console.log("CREATEGAME:", resp)
+    if (resp) {
+      setBets({
+        id: resp.insertId,
+        amount: params.amount,
+        rounds: params.rounds,
+        account_id: account.id
       })
-  } else {
-    setAccounts(
-      {
-        name: config.ACCOUNT.NAME,
-        secret: config.ACCOUNT.SECRET,
-        id: config.ACCOUNT.ID,
-        opponent: config.ACCOUNT.OPPONENT
-      })
-  }
+    } else {
+      alert("CONNECTION ERROR")
+    }
+
 }
 
-const updateAccount = () => {
-    setAccounts(
-      {
-        name: document.getElementById('name').value,
-        secret: document.getElementById('secret').value,
-        id: '',
-        opponent: document.getElementById('opponentId').value
-      })
-}
-
-
+  console.log("BETS:", bets)
   return (
     <div className="Lobby">
-      <h1>LOBBY</h1>
-{/*
-      <p><input type="button" onClick={() => changeAccount(1)} value="SET ACCOUNT 1" /><br /><input type="button" onClick={() => changeAccount(2)} value="SET ACCOUNT 2" /></p>
-*/}
-      <p>Your account</p>
+    { 
+    bets && bets.length > 0 && 
+      bets.map((bet) => {
+        return <Bet 
+          key={bet.id}
+          bet={bet}
+          account={account}
+          enterGame={enterGame}
+          />
+      })
+    }
       <p>
-      <input placeholder="Account Name (email)" id="name" type="text" className="inpName" onChange={()=>updateAccount()} value={accounts.name || ''} />
+      <input placeholder="Amount to bet" id="amount" type="text" className="inpAmount" />
       </p>
-      <input placeholder="Secret phrase" id="secret" type="text" className="inpSecret" onChange={()=>updateAccount()} value={accounts.secret || ''} />
-      <p>Opponent id</p>
       <p>
-      <input placeholder="id" id="opponentId" type="text" className="inpName" onChange={()=>updateAccount()} value={accounts.opponent || ''} />
-      </p>   
-      <p><input type="button" onClick={() => enterGame(1)} value="PLAYER 1" /></p>
-      <p><input type="button" onClick={() => enterGame(2)} value="PLAYER 2" /></p>
+      <input placeholder="Number of rounds" id="rounds" type="text" className="inpRounds" /> 
+      </p>
+    <p><input className="inputButton" type="button" onClick={() => createGame()} value="MAKE BET" /></p>
     </div>
   );
 }

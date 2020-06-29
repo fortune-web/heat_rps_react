@@ -1,0 +1,19 @@
+.Login {
+  text-align: center;
+  display: inline-block;
+  margin: 8px;
+  cursor: pointer;
+}
+
+
+.inpName {
+	width:300px;
+}
+
+.inpSecret {
+	width:600px;
+}
+
+.inpId {
+	width:300px;
+}

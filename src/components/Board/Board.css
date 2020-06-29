@@ -2,5 +2,46 @@
   text-align: center;
   display: inline-block;
   margin: 8px;
+  margin-top: 20px;
   cursor: pointer;
+}
+
+
+.gameInfo {
+	text-align: center;
+    background: rgb(255, 255, 255, 0.2);
+    border-radius: 4px;
+
+}
+
+.listItem {
+	padding: 2px 12px;
+    line-height: 20pt;
+    display:inline-block;
+}
+
+.listItem:not(:last-child) {
+	border-right: 1px solid rgb(255, 255, 255, 0.1);
+}
+
+.listName {
+	font-weight: bold;
+	margin-right: 12px;
+	display: block;
+	width:180px;
+}
+.listData {
+	line-height:18pt;
+}
+
+
+.roundNumber {
+	color: #e6c960;
+    display: block;
+    font-size: 34pt;
+    line-height: 34pt;
+}
+
+.passwordInput {
+	width:250px;
 }

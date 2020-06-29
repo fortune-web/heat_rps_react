@@ -3,7 +3,19 @@
   display: inline-block;
   margin: 8px;
   cursor: pointer;
+  transform:scale(1.25);
 }
+
+
+.rock {
+  transform:scale(1.25);
+}
+
+.paper {
+  margin-right: 20px;
+}
+
+.scissor {}
 
 .App-logo {
   height: 40vmin;

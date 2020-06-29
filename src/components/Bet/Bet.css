@@ -1,10 +1,7 @@
-.Lobby {
+.Bet {
   text-align: center;
   display: inline-block;
   margin: 8px;
-  margin-top: 80px;
 }
 
-.inputButton {
-	cursor:pointer;
-}
+

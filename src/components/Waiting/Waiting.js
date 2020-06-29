@@ -18,7 +18,7 @@ import { config } from '../../config.js';
 import crypto from 'crypto';
 
 
-const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, accounts, player }) => {
+const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, account, player }) => {
 
   const [ winner, setWinner ] = useState(null)
   const [ decryptResult, setDecryptResult ] = useState(null)
@@ -35,12 +35,12 @@ const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, ac
     console.log("THIS:", this)
     console.log("MESSAGE:", m)
     console.log("MOVE:", move)
-    console.log("ACC:", accounts)
-    if ((m && m.recipient === accounts.opponent) || 
-      (m && m.sender === accounts.opponent)) {
+    console.log("ACC:", account)
+    if ((m && m.recipient === account.opponent) || 
+      (m && m.sender === account.opponent)) {
 
       let message
-      let data = await HGame.readMessage(m, accounts.secret)
+      let data = await HGame.readMessage(m, account.secret)
       data = JSON.parse(data)
 
       console.log("CARD:", move.player1Move)
@@ -94,8 +94,8 @@ const Waiting = ({ move, stage, setStage, response, setResponse, restartGame, ac
         if (player === 1) {
           const vars = {
             card: JSON.stringify({password: move.password}),
-            account: accounts,
-            opponent: accounts.opponent,
+            account: account,
+            opponent: account.opponent,
           }
           console.log("VARS:", vars)
           const data = await HGame.makeMove(vars);

@@ -12,8 +12,19 @@ html {
 }
 
 .container {
-  margin-top: 120px; 
+ /* margin-top: 120px; */
 }
+
+
+input[type=button] {
+    padding: 6px 10px;
+    background-color: #e6d597;
+    border: none;
+    border-radius: 2px;
+    font-size: 12pt;
+    margin-top: 9px;
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
