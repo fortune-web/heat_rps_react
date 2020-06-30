@@ -133,6 +133,16 @@ const Board = ({
     return crypto.randomBytes(length).toString('base64').slice(0,-1)
 }
 
+  const showWinner = (playerCard, opponentCard) => {
+    if (!opponentCard) return
+    if (playerCard === opponentCard) return 'DRAW'
+    if (playerCard === 'rock' && opponentCard === 'scissor') return 'YOU WIN'
+    if (playerCard === 'rock' && opponentCard === 'paper') return 'YOU LOSE'
+    if (playerCard === 'paper' && opponentCard === 'rock') return 'YOU WIN'
+    if (playerCard === 'paper' && opponentCard === 'scissor') return 'YOU LOSE'
+    if (playerCard === 'scissor' && opponentCard === 'paper') return 'YOU WIN'
+    if (playerCard === 'scissor' && opponentCard === 'rock') return 'YOU LOSE'
+  }
 
   useEffect(() => {
     setPassword(generatePassword(14))
@@ -164,51 +174,53 @@ const Board = ({
         </div>
       </div>
 
-      { (game.current_round <= game.rounds) &&
-
-      <div className="playerBoard">
-
-        <h2>Round
-        <span className="roundNumber">{game.current_round}</span></h2>
-        <h1>Make your move</h1>
-
-        <div className="selectInfo">
-          <Element element='rock' play={play} active={true} />
-          <Element element='paper' play={play} active={true} />
-          <Element element='scissor' play={play} active={true} />
-          <p>Select rock, paper or scissor</p>
+      <h2>Round
+      <span className="roundNumber">{game.current_round}</span></h2>
+      { 
+      game.current_round <= game.rounds &&
+        <div className="playerBoard">
+          <h1>Make your move</h1>
+          <div className="selectInfo">
+            <Element element='rock' play={play} active={true} />
+            <Element element='paper' play={play} active={true} />
+            <Element element='scissor' play={play} active={true} />
+            <p>Select rock, paper or scissor</p>
+          </div>
         </div>
+      }
+      <div className="movesInfo">
+      {
+        moves.map((move, key) => {
+          return(
+            <div className="roundsInfo" key={key}>
+              <div className="roundRound">
+                <p>Round {key+1}</p>
+              </div>
+              <div className="roundItem">
+                <span className="roundName">YOU</span>
+                <Element element={move.card} active={false}
+                />
+              </div>
+              <div className="roundItem">
+                <span className="roundName">OPPONENT</span>
+                <Element element={opponentMoves[game.current_round-1] ? opponentMoves[game.current_round-1] : '?'} active={false} />
+              </div>
+              <div className="roundWinner">
+                <p>{showWinner(move.card, opponentMoves[game.current_round-1])}</p>
+              </div>
+            </div>   
+          )
+        })
+      }
+      </div>
 
-        <div className="movesInfo">
-        {
-          moves.map((move, key) => {
-            return(
-              <div className="gameInfo" key={key}>
-                <div className="listItem">
-                  <span className="listName">YOUR MOVE</span>
-                  <Element element={move.card}  active={false}
-                  key={key}/>
-                </div>
-                <div className="listItem">
-                  <span className="listName">OPPONENT MOVE</span>
-                  <Element element={opponentMoves[game.current_round-1]} />
-                </div>
-              </div>   
-            )
-          })
-        }
-        </div>
-
-        { 1==2 &&
+      { 
+      1==2 &&
         <div className="passwordInfo">
           <p>Password to encrypt your move (you can change it)</p>
           <input className="passwordInput" type="text" value={ password } onChange={ (e) => updatePassword(e) }/>
         </div>
-        }
-
-      </div>
       }
-
 
     </div>
   );

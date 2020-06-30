@@ -23,7 +23,13 @@ const Element = ({ element, play, active }) => {
 
   return (
     <div className={active ? 'activeCard' : 'card'}>
-      <img src={image} alt={element.toUpperCase()} name={element.toUpperCase()} className={element==='?' ? 'gray' : element} onClick={()=>play(element)}/>
+      <img 
+        src={image} 
+        className={element==='?' ? 'gray' : element} 
+        alt={element.toUpperCase()} 
+        name={element.toUpperCase()} 
+        onClick={active ? ()=>play(element) : null}
+      />
     </div>
   );
 }

@@ -2,9 +2,7 @@
   text-align: center;
   display: inline-block;
   margin: 8px;
-  cursor: pointer;
-  transform:scale(1.25);
-  mix-blend-mode: multiply;
+  transform:scale(0.8);
   transition:.25s;
 }
 
@@ -28,7 +26,7 @@
   transform:scale(1.15);
 }
 
-.paper {
+.activeCard .paper {
   transform:scale(1.15);
   margin-right: 20px;
 }

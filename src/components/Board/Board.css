@@ -3,7 +3,6 @@
   display: inline-block;
   margin: 8px;
   margin-top: 20px;
-  cursor: pointer;
 }
 
 
@@ -11,9 +10,15 @@
 	text-align: center;
     background: rgb(255, 255, 255, 0.2);
     border-radius: 4px;
-
 }
 
+.roundsInfo {
+	text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width:180px;
+	display: inline-block;
+}
 
 .selectInfo {
 	margin-top:28px;
@@ -34,18 +39,40 @@
 	font-weight: bold;
 	margin-right: 12px;
 	display: block;
+	position: relative;
 	width:180px;
+	z-index:10;
 }
+
 .listData {
 	line-height:18pt;
 }
 
+.roundItem {
+	padding: 2px 12px;
+    line-height: 20pt;
+    display:block;
+}
+
+.roundRound {
+	font-weight: bold;
+	font-size:17pt;
+	margin-right: 12px;
+	display: block;
+	position: relative;
+	z-index:10;
+}
 
 .roundNumber {
 	color: #e6c960;
     display: block;
     font-size: 34pt;
     line-height: 34pt;
+}
+
+.roundWinner {
+	font-size:18pt;
+	font-weight: bold;
 }
 
 .passwordInput {
