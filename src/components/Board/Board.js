@@ -31,6 +31,7 @@ const Board = ({
   player
 }) => {
 
+  const [ waiting, setWaiting ] = useState(false)
   const [ password, setPassword ] = useState('')
   var refSubscriber = useRef(null)
 
@@ -82,15 +83,23 @@ const Board = ({
           blockchain_hash: data.fullHash
         }
 
-        httpClient.apiPost('move', {
-          params, 
-        }).then(({ data }) => {
-          if(data && data.length) {
-            
-          } else {
-            alert("CONNECTION ERROR")
+        console.log("MOVEPOST:", params)
+        const resp = await fetch('http://localhost:3010/move', {
+          method: 'POST',
+          body: JSON.stringify(params), 
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
           }
         })
+
+        console.log("MOVED:", resp)
+        if(resp && resp.ok) {
+          setWaiting(true)
+        } else {
+          alert("CONNECTION ERROR")
+        }
+
 
 
       } else {
@@ -100,8 +109,9 @@ const Board = ({
       }
 
     }
-
   }
+
+
 
   const waitForPlayer1 = async (m) => {
 
@@ -144,14 +154,50 @@ const Board = ({
     if (playerCard === 'scissor' && opponentCard === 'rock') return 'YOU LOSE'
   }
 
+
+  const listenMoves = () => {
+
+    const params = {
+        game_id: game.id,
+        account_id: account.id,
+        player: (player === 1) ? 2 : 1,
+    }
+
+    httpClient.apiPost('listen', {
+      params, 
+    }).then(({ data }) => {
+
+      if ( !data ) {
+        alert("LISTENING CONNECTION ERROR")
+      }
+
+      if ( data && data.length > 0 ) {
+        setWaiting(false)
+        setOpponentMoves(data.moves)
+      } else {
+        setTimeout(listenMoves, 5000)
+      }
+
+    })
+
+  }
+
+
   useEffect(() => {
     setPassword(generatePassword(14))
-
     refSubscriber = HGame.subscribe('messages', waitForPlayer1)
+  }, [ game.round ])
 
-  }, [game.round])
+  useEffect(() => {
+    if ( waiting ) {
+      setTimeout(listenMoves, 3000)
+    }
+  }, [ waiting ])
+
+
 
   console.log("MOVES:", moves)
+
   return (
     <div className="Board">
 

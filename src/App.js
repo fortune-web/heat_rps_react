@@ -33,18 +33,70 @@ const App = () => {
 
   // console.log("CONFIG:", process.env)
 
-  const enterGame = (bet) => {
-    setPlayer(2)
-    setGame({
-      id: bet.id,
-      account_id: bet.account_id,
-      opponent: account.id,
-      rounds: bet.rounds,
-      amount: bet.amount,
-      current_round: 1
-    })
-    setStage(stages.GAME) // 2
+  const enterGame = async (bet) => {
+    if ( bet.state === 'CREATED' && !bet.opponent ) {
+
+      const params = {
+        game_id: bet.id,
+        opponent_id: account.id,
+      }
+
+      const resp = await fetch('http://localhost:3010/start', {
+        method: 'POST',
+        body: JSON.stringify(params),
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      console.log("STARTED:", resp)
+      if (resp) {
+        setPlayer(2)
+        setGame({
+          id: bet.id,
+          account_id: bet.account_id,
+          opponent: account.id,
+          rounds: bet.rounds,
+          amount: bet.amount,
+          current_round: 1
+        })
+        setStage(stages.STARTED) // 2
+      }
+    }
   }
+
+  const loadGame = async (bet) => {
+
+      const params = {
+        game_id: bet.id,
+      }
+
+      const resp = await fetch('http://localhost:3010/load', {
+        method: 'POST',
+        body: JSON.stringify(params),
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      console.log("LOADED:", resp)
+      if (resp) {
+        setPlayer(2)
+        setGame({
+          id: bet.id,
+          account_id: bet.account_id,
+          opponent: account.id,
+          rounds: bet.rounds,
+          amount: bet.amount,
+          current_round: 1
+        })
+        setStage(stages.STARTED) // 2
+      }
+
+  }
+
 
   const restartGame = () => {
     setResponse(null)
@@ -52,7 +104,7 @@ const App = () => {
     setStage(stages.LOBBY) // 1
   }
 
-    console.log("GAME:", game)
+  // console.log("GAME:", game)
   return (
     <div className="App">
       <div className="container">
@@ -69,6 +121,7 @@ const App = () => {
         stage === stages.LOBBY && // 1
         <Lobby 
           enterGame={enterGame}
+          loadGame={loadGame}
           account={account}
           setAccount={setAccount}
           bets={bets}
@@ -76,7 +129,7 @@ const App = () => {
         />
       }
       {
-        stage === stages.GAME && // 2
+        stage === stages.STARTED && // 2
         <Board 
           stage={stage}
           setStage={setStage} 

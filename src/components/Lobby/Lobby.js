@@ -13,16 +13,18 @@ import Bet from '../Bet/Bet';
 import './Lobby.css';
 import { config } from '../../config.js';
 
-const Lobby = ({ enterGame, account, bets, setBets }) => {
+const Lobby = ({ enterGame, loadGame, account, bets, setBets }) => {
 
   useEffect(() => {
 
-    httpClient.apiGet('bets', {
+    httpClient.apiPost('bets', {
       params: {
+        account_id: account.id
       }, 
     }).then(({ data }) => {
       if(data && data.length) {
         setBets(data)
+        console.log("BETS:", data)
       } else {
         alert("CONNECTION ERROR")
       }
@@ -68,17 +70,16 @@ const createGame = async () => {
 
 }
 
-  console.log("BETS:", bets)
   return (
     <div className="Lobby">
     { 
     bets && bets.length > 0 && 
       bets.map((bet) => {
         return <Bet 
-          key={bet.id}
           bet={bet}
           account={account}
           enterGame={enterGame}
+          loadGame={loadGame}
           />
       })
     }

@@ -9,7 +9,7 @@ import React, {
 import './Bet.css';
 import { config } from '../../config.js';
 
-const Bet = ({ account, bet, enterGame }) => {
+const Bet = ({ account, bet, enterGame, loadGame }) => {
 
   const startGame = (bet) => {
     enterGame(bet)
@@ -24,10 +24,10 @@ const Bet = ({ account, bet, enterGame }) => {
       <div className="rounds">ROUNDS: {bet.rounds}</div>
       <div>
       {
-        bet.account_id !== account.id &&
+        (bet.state === 'CREATED' && bet.account_id != account.id) &&
         <input className="inputButton" type="button" onClick={() => startGame(bet)} value="START GAME" />
         ||
-        <p>YOUR BET</p>
+        <input className="inputButton" type="button" onClick={() => loadGame(bet)} value="CONTINUE GAME" />
       }
         
       </div>
