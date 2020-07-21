@@ -1,5 +1,5 @@
 src/config.js
-# src/accounts.js
+src/accounts.js
 
 # dependencies
 /node_modules
