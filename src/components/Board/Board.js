@@ -208,7 +208,7 @@ const Board = ({
         </div>
         <div className="listItem">
           <span className="listName">Opponent Id</span>
-          <span className="listData">{player === 1 ? game.opponent : game.account_id}</span>
+          <span className="listData">{player === 1 ? (game.opponent || 'WAITING') : game.account_id}</span>
         </div>
         <div className="listItem">
           <span className="listName">Bet amount</span>

@@ -16,20 +16,32 @@ import { config } from '../../config.js';
 const Lobby = ({ enterGame, loadGame, account, bets, setBets }) => {
 
   useEffect(() => {
+    const fetchBets = async() => {
+      console.log("ACCC:", account)
 
-    httpClient.apiPost('bets', {
-      params: {
+      const params = {
         account_id: account.id
-      }, 
-    }).then(({ data }) => {
-      if(data && data.length) {
+      }
+
+      const resp = await fetch('http://localhost:3010/bets', {
+        method: 'POST',
+        body: JSON.stringify(params),
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const data = await resp.json()
+
+      if (data && data.length) {
         setBets(data)
         console.log("BETS:", data)
       } else {
         alert("CONNECTION ERROR")
       }
-    })
-
+    }
+    fetchBets()
   }, [])
 
 
@@ -87,7 +99,10 @@ const createGame = async () => {
       <input placeholder="Amount to bet" id="amount" type="text" className="inpAmount" />
       </p>
       <p>
-      <input placeholder="Number of rounds" id="rounds" type="text" className="inpRounds" /> 
+      <select id="rounds" type="text" className="inpRounds" >
+      <option value="5">Short (5 rounds)</option>
+      <option value="10">Long (10 rounds)</option>
+      </select> 
       </p>
     <p><input className="inputButton" type="button" onClick={() => createGame()} value="MAKE BET" /></p>
     </div>

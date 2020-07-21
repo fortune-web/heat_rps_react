@@ -34,7 +34,7 @@ const App = () => {
   // console.log("CONFIG:", process.env)
 
   const enterGame = async (bet) => {
-    if ( bet.state === 'CREATED' && !bet.opponent ) {
+    if ( bet.state === 'CREATED' ) {
 
       const params = {
         game_id: bet.id,
@@ -51,19 +51,20 @@ const App = () => {
       })
 
       console.log("STARTED:", resp)
-      if (resp) {
-        setPlayer(2)
-        setGame({
-          id: bet.id,
-          account_id: bet.account_id,
-          opponent: account.id,
-          rounds: bet.rounds,
-          amount: bet.amount,
-          current_round: 1
-        })
-        setStage(stages.STARTED) // 2
-      }
     }
+
+
+    setPlayer(2)
+    setGame({
+      id: bet.id,
+      account_id: bet.account_id,
+      opponent: account.id,
+      rounds: bet.rounds,
+      amount: bet.amount,
+      current_round: 1
+    })
+    setStage(stages.STARTED) // 2
+    
   }
 
   const loadGame = async (bet) => {
@@ -81,18 +82,39 @@ const App = () => {
         }
       })
 
-      console.log("LOADED:", resp)
-      if (resp) {
-        setPlayer(2)
+      const data = await resp.json()
+      console.log("LOADED:", data)
+      console.log("RESP:", resp)
+
+      if (resp.ok) {
+
+        if (data.account_id !== account.id) {
+          console.log("EQ ACCOUNTS:")
+          enterGame(bet)
+          return
+        }
+
+        console.log("DIFF ACCOUNTS:")
+        setPlayer(1)
+        const newData = {
+          id: data.id,
+          account_id: data.account_id,
+          opponent: data.opponent,
+          rounds: data.rounds,
+          amount: data.amount,
+          current_round: 1
+        }
+
+        console.log("GAME:", newData)
         setGame({
-          id: bet.id,
-          account_id: bet.account_id,
-          opponent: account.id,
-          rounds: bet.rounds,
-          amount: bet.amount,
+          id: data.id,
+          account_id: data.account_id,
+          opponent: data.opponent,
+          rounds: data.rounds,
+          amount: data.amount,
           current_round: 1
         })
-        setStage(stages.STARTED) // 2
+        setStage((data.state === 'CREATED') ? stages.STARTED : stages.STARTED) // 2
       }
 
   }
@@ -129,7 +151,7 @@ const App = () => {
         />
       }
       {
-        stage === stages.STARTED && // 2
+        (stage === stages.STARTED || stage === stages.CREATED) && // 2
         <Board 
           stage={stage}
           setStage={setStage} 
@@ -144,7 +166,7 @@ const App = () => {
         />
       }
       {
-        stage >= stages.WAITING_FOR_FIRST && // 3
+        stage > stages.WAITING_FOR_FIRST && // 3
         <Waiting 
           moves={moves}
           stage={stage}
