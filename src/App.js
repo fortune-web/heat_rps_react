@@ -33,6 +33,24 @@ const App = () => {
 
   // console.log("CONFIG:", process.env)
 
+
+  const changeAccount = (acc) => {
+
+    if ( acc === 1 ) {
+      setAccount({
+        name: config.ACCOUNT.NAME,
+        secret: config.ACCOUNT.SECRET,
+        id: config.ACCOUNT.ID,
+      })
+    } else {
+      setAccount({
+        name: config.ACCOUNT2.NAME,
+        secret: config.ACCOUNT2.SECRET,
+        id: config.ACCOUNT2.ID,
+      }) 
+    }
+  }
+
   const enterGame = async (bet) => {
     if ( bet.state === 'CREATED' ) {
 
@@ -72,7 +90,7 @@ const App = () => {
       const params = {
         game_id: bet.id,
       }
-
+      console.log("LOADGAME:", params)
       const resp = await fetch('http://localhost:3010/load', {
         method: 'POST',
         body: JSON.stringify(params),
@@ -137,6 +155,7 @@ const App = () => {
           account={account}
           setAccount={setAccount}
           setStage={setStage}
+          changeAccount={changeAccount}
         />
       }
       {

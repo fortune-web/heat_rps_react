@@ -68,14 +68,20 @@ const createGame = async () => {
       }
     })
 
-    console.log("CREATEGAME:", resp)
-    if (resp) {
-      setBets({
-        id: resp.insertId,
+    const data = await resp.json()
+
+    console.log("CREATEGAME:", data)
+
+    if (data) {
+      const bet = {
+        id: data.insertId,
         amount: params.amount,
         rounds: params.rounds,
-        account_id: account.id
-      })
+        account_id: account.id,
+        state: 'CREATED'
+      }
+      setBets(bet)
+      loadGame(bet)
     } else {
       alert("CONNECTION ERROR")
     }

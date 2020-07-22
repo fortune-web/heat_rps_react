@@ -13,7 +13,7 @@ import Bet from '../Bet/Bet';
 import './Login.css';
 import { config, stages } from '../../config.js';
 
-const Login = ({ account, setAccount, setStage }) => {
+const Login = ({ account, setAccount, setStage, changeAccount }) => {
 
   const updateAccount = () => {
     setAccount(
@@ -27,9 +27,9 @@ const Login = ({ account, setAccount, setStage }) => {
   return (
     <div className="Login">
       <h1>LOGIN</h1>
-  {/*
+  
       <p><input type="button" onClick={() => changeAccount(1)} value="SET ACCOUNT 1" /><br /><input type="button" onClick={() => changeAccount(2)} value="SET ACCOUNT 2" /></p>
-  */}
+  
       <p>Your account</p>
       <p>
       <input placeholder="Account Name (email)" id="name" type="text" className="inpName" onChange={()=>updateAccount()} value={account.name || ''} />

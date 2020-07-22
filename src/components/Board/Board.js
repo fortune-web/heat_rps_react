@@ -39,7 +39,7 @@ const Board = ({
 
     if ( element === '?' ) return
 
-    if ( player === 2 ) {
+    // if ( player === 2 ) {
       let message = HGame.aesEncrypt(element, password)
       message = JSON.stringify({
         move: message
@@ -67,11 +67,7 @@ const Board = ({
           password,
           message
         })
-        setMoves(_moves)
-        setGame({
-          ...game,
-          current_round: game.current_round + 1
-        })
+        // setMoves(_moves)
 
         const params = {
           game_id: game.id,
@@ -108,7 +104,7 @@ const Board = ({
         return
       }
 
-    }
+  //  }
   }
 
 
@@ -155,7 +151,7 @@ const Board = ({
   }
 
 
-  const listenMoves = () => {
+  const listenMoves = async () => {
 
     const params = {
         game_id: game.id,
@@ -163,25 +159,64 @@ const Board = ({
         player: (player === 1) ? 2 : 1,
     }
 
-    httpClient.apiPost('listen', {
-      params, 
-    }).then(({ data }) => {
-
-      if ( !data ) {
-        alert("LISTENING CONNECTION ERROR")
+    const resp = await fetch('http://localhost:3010/listen', {
+      method: 'POST',
+      body: JSON.stringify(params), 
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
       }
-
-      if ( data && data.length > 0 ) {
-        setWaiting(false)
-        setOpponentMoves(data.moves)
-      } else {
-        setTimeout(listenMoves, 5000)
-      }
-
     })
+
+    const data = await resp.json()
+
+    if ( !data ) {
+      alert("LISTENING CONNECTION ERROR")
+    }
+
+    if (player === 1) {
+      setOpponentMoves(data.player2)
+      setMoves(data.player1)
+    } else {
+      setOpponentMoves(data.player1)
+      setMoves(data.player2)
+    }
+
+    setGame({
+      ...game,
+      current_round: Math.max(data.player1.length, data.player2.length)
+    })
+    setTimeout(listenMoves, 5000)
 
   }
 
+
+  const showCards = () => {
+
+      let resp = []
+      for(round = 0; round < game.current_round; round++) {
+         resp.push (
+            <div className="roundsInfo" key={round}>
+              <div className="roundRound">
+                <p>Round {round + 1}</p>
+              </div>
+              <div className="roundItem">
+                <span className="roundName">YOU</span>
+                <Element element={moves[round] ? moves[round].card : null} active={false}
+                />
+              </div>
+              <div className="roundItem">
+                <span className="roundName">OPPONENT</span>
+                <Element element={opponentMoves[round] ? opponentMoves[round].card : null} active={false} />
+              </div>
+              <div className="roundWinner">
+                <p>{showWinner(moves[round]?.card, opponentMoves[round]?.card)}</p>
+              </div>
+            </div>   
+          )
+        }
+      return resp
+      }
 
   useEffect(() => {
     setPassword(generatePassword(14))
@@ -189,14 +224,15 @@ const Board = ({
   }, [ game.round ])
 
   useEffect(() => {
-    if ( waiting ) {
-      setTimeout(listenMoves, 3000)
+    console.log("CHECKING STATE:", stage, stages.STARTED)
+    if ( stage === stages.STARTED && game.id ) {
+      listenMoves()
     }
-  }, [ waiting ])
+  }, [])
 
 
 
-  console.log("MOVES:", moves)
+  // console.log("MOVES:", moves)
 
   return (
     <div className="Board">
@@ -236,27 +272,7 @@ const Board = ({
       }
       <div className="movesInfo">
       {
-        moves.map((move, key) => {
-          return(
-            <div className="roundsInfo" key={key}>
-              <div className="roundRound">
-                <p>Round {key+1}</p>
-              </div>
-              <div className="roundItem">
-                <span className="roundName">YOU</span>
-                <Element element={move.card} active={false}
-                />
-              </div>
-              <div className="roundItem">
-                <span className="roundName">OPPONENT</span>
-                <Element element={opponentMoves[game.current_round-1] ? opponentMoves[game.current_round-1] : '?'} active={false} />
-              </div>
-              <div className="roundWinner">
-                <p>{showWinner(move.card, opponentMoves[game.current_round-1])}</p>
-              </div>
-            </div>   
-          )
-        })
+        showCards()
       }
       </div>
 
