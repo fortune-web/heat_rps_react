@@ -40,6 +40,10 @@ const Board = ({
     console.log("PLAY........................")
     if ( element === '?' ) return
 
+    if ( game.current_round < moves.length ) {
+      alert("Wait for your opponent move")
+    }
+
     // if ( player === 2 ) {
       let message = HGame.aesEncrypt(element, password)
       message = JSON.stringify({
@@ -98,14 +102,15 @@ const Board = ({
           const data = await resp.json()
 
           console.log("MOVERESULT:", data)
+
           if ( data.finished ) {
             // Game ended
             setStage(stages.FINISHED)
-            setGame({
-              ...game,
+            setGame(prevGame => ({
+              ...prevGame,
               state: 'FINISHED',
               winner: data.winner
-            })
+            }))
           }
 
 
@@ -151,13 +156,14 @@ const Board = ({
     }
 
     if ( data.state === 'STARTED' ) {
-      setGame({
-        ...game,
+      setGame(prevGame => ({
+        ...prevGame,
         opponent: data.opponent,
         state: 'STARTED',
         current_round: 1
-      })
+      }))
       setStage(stages.STARTED)
+      listenMoves()
     } 
 
   }
@@ -206,6 +212,9 @@ const Board = ({
 
   const listenMoves = async () => {
     console.log("LISTEN...................")
+    console.log("game:", game)
+    console.log("stage:", stage)
+
     const params = {
         game_id: game.id,
         account_id: account.id,
@@ -236,54 +245,65 @@ const Board = ({
     }
 
     let _current_round = Math.max(data.player1.length, data.player2.length)
-    if (data.player1.length === data.player2.length) _current_round++
+    if (data.player1.length === data.player2.length && data.state !== 'FINISHED') _current_round++
     if (_current_round > game.rounds) _current_round = game.rounds
 
-    setGame({
-      ...game,
+    setGame(prevGame => ({
+      ...prevGame,
+      state: data.state,
       current_round: _current_round
-    })
+    }))
+    setStage((data.state === 'CREATED') ? stages.CREATED : (data.state === 'FINISHED') ? stages.FINISHED : stages.STARTED)
+ 
 
-    if (stage === stages.STARTED) setTimeout(listenMoves, 5000)
+    if (data.state === 'STARTED') {
+      setTimeout(listenMoves, 5000)
+    }
 
   }
 
 
   const showCards = () => {
 
-      let resp = []
-      for(round = 0; 
-        round < game.current_round && 
-        round <= game.rounds &&
-        ((round < opponentMoves.length && round < moves.length) || game.state === 'STARTED'); 
-        round++) {
-console.log("GSTATE:", game.state)
-         resp.push (
-            <div className="roundsInfo" key={round}>
-              <div className="roundRound">
-                <p>Round {round + 1}</p>
-              </div>
-              <div className="roundItem">
-                <span className="roundName">YOU</span>
-                <Element element={moves[round] ? moves[round].card : null} active={false}
-                />
-              </div>
-              <div className="roundItem">
-                <span className="roundName">OPPONENT</span>
-                <Element 
-                element={opponentMoves[round] ? opponentMoves[round].card : null} 
-                move={opponentMoves[round] ? opponentMoves[round].move : null}
-                password={opponentMoves[round] ? opponentMoves[round].password : null}
-                active={false} />
-              </div>
-              <div className="roundWinner">
-                <p>{showWinner(moves[round]?.card, opponentMoves[round]?.card)}</p>
-              </div>
-            </div>   
-          )
-        }
-      return resp
+    let resp = []
+    for(round = 0; 
+      round < game.current_round && 
+      round <= game.rounds &&
+      ((round < opponentMoves.length && round < moves.length) || game.state === 'STARTED'); 
+      round++) {
+      
+      console.log("GSTATE:", game.state)
+
+        resp.push (
+          <div className="roundsInfo" key={round}>
+            <div className="roundRound">
+              <p>Round {round + 1}</p>
+            </div>
+            <div className="roundItem">
+              <span className="roundName">YOU</span>
+              <Element element={moves[round] ? moves[round].card : null} active={false}
+              />
+            </div>
+            <div className="roundItem">
+              <span className="roundName">OPPONENT</span>
+              <Element 
+              element={opponentMoves[round] ? opponentMoves[round].card : null} 
+              move={opponentMoves[round] ? opponentMoves[round].move : null}
+              password={opponentMoves[round] ? opponentMoves[round].password : null}
+              active={false} />
+            </div>
+            <div className="roundWinner">
+              <p>{showWinner(moves[round]?.card, opponentMoves[round]?.card)}</p>
+            </div>
+          </div>   
+        )
       }
+    return resp
+  }
+
+  useEffect(() => {
+    listenMoves()
+  }, [])
 
   useEffect(() => {
     setPassword(generatePassword(14))
@@ -291,9 +311,13 @@ console.log("GSTATE:", game.state)
   }, [ game.current_round ])
 
   useEffect(() => {
+    // refSubscriber = HGame.subscribe('messages', waitForPlayer1)
+  }, [ game ])
+
+  useEffect(() => {
     console.log("CHECKING STATE:", stage, stages.STARTED)
     if ( stage === stages.STARTED && game.id ) {
-      listenMoves()
+      // listenMoves()
     }
     console.log("CHECKING IF WAIT")
     if ( stage === stages.CREATED && game.id ) {

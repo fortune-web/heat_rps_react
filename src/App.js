@@ -51,11 +51,11 @@ const App = () => {
     }
   }
 
-  const enterGame = async (bet) => {
-    if ( bet.state === 'CREATED' ) {
+  const enterGame = async (data) => {
+    if ( data.state === 'CREATED' ) {
 
       const params = {
-        game_id: bet.id,
+        game_id: data.id,
         opponent_id: account.id,
       }
 
@@ -74,15 +74,15 @@ const App = () => {
 
     setPlayer(2)
     setGame({
-      id: bet.id,
-      account_id: bet.account_id,
+      id: data.id,
+      account_id: data.account_id,
       opponent: account.id,
-      rounds: bet.rounds,
-      amount: bet.amount,
-      state: 'STARTED',
+      rounds: data.rounds,
+      amount: data.amount,
+      state: data.state,
       current_round: 1
     })
-    setStage(stages.STARTED) // 2
+    setStage((data.state === 'CREATED') ? stages.CREATED : (data.state === 'FINISHED') ? stages.FINISHED : stages.STARTED)
     
   }
 
@@ -109,22 +109,12 @@ const App = () => {
 
         if (data.account_id !== account.id) {
           console.log("EQ ACCOUNTS:")
-          enterGame(bet)
+          enterGame(data)
           return
         }
 
         console.log("DIFF ACCOUNTS:")
         setPlayer(1)
-        const newData = {
-          id: data.id,
-          account_id: data.account_id,
-          opponent: data.opponent,
-          rounds: data.rounds,
-          amount: data.amount,
-          current_round: 1
-        }
-
-        console.log("GAME:", newData)
         setGame({
           id: data.id,
           account_id: data.account_id,
