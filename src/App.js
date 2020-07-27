@@ -79,6 +79,7 @@ const App = () => {
       opponent: account.id,
       rounds: bet.rounds,
       amount: bet.amount,
+      state: 'STARTED',
       current_round: 1
     })
     setStage(stages.STARTED) // 2
@@ -130,9 +131,10 @@ const App = () => {
           opponent: data.opponent,
           rounds: data.rounds,
           amount: data.amount,
+          state: data.state,
           current_round: 1
         })
-        setStage((data.state === 'CREATED') ? stages.STARTED : stages.STARTED) // 2
+        setStage((data.state === 'CREATED') ? stages.CREATED : (data.state === 'FINISHED') ? stages.FINISHED : stages.STARTED) 
       }
 
   }
@@ -170,7 +172,7 @@ const App = () => {
         />
       }
       {
-        (stage === stages.STARTED || stage === stages.CREATED) && // 2
+        (stage === stages.STARTED || stage === stages.CREATED || stage === stages.FINISHED) && // 2
         <Board 
           stage={stage}
           setStage={setStage} 
@@ -180,19 +182,6 @@ const App = () => {
           setMoves={setMoves}
           opponentMoves={opponentMoves} 
           setOpponentMoves={setOpponentMoves}
-          account={account}  
-          player={player}
-        />
-      }
-      {
-        stage > stages.WAITING_FOR_FIRST && // 3
-        <Waiting 
-          moves={moves}
-          stage={stage}
-          setStage={setStage} 
-          response={response}
-          setResponse={setResponse}
-          restartGame={restartGame}
           account={account}  
           player={player}
         />

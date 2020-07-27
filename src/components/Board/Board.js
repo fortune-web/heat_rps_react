@@ -11,9 +11,9 @@ import HGame from '@ethernity/heat-games';
 
 import httpClient from '../../helpers/axios';
 
-
 // Components
 import Element from '../Element/Element';
+import Encrypter from '../Encrypter/Encrypter';
 
 import './Board.css';
 import { stages } from '../../config.js';
@@ -37,6 +37,7 @@ const Board = ({
 
   const play = async (element) => {
 
+    console.log("PLAY........................")
     if ( element === '?' ) return
 
     // if ( player === 2 ) {
@@ -76,6 +77,7 @@ const Board = ({
           password: password,
           round: game.current_round,
           player,
+          card: element,
           blockchain_hash: data.fullHash
         }
 
@@ -92,11 +94,24 @@ const Board = ({
         console.log("MOVED:", resp)
         if(resp && resp.ok) {
           setWaiting(true)
+
+          const data = await resp.json()
+
+          console.log("MOVERESULT:", data)
+          if ( data.finished ) {
+            // Game ended
+            setStage(stages.FINISHED)
+            setGame({
+              ...game,
+              state: 'FINISHED',
+              winner: data.winner
+            })
+          }
+
+
         } else {
-          alert("CONNECTION ERROR")
+          alert("MOVE CONNECTION ERROR")
         }
-
-
 
       } else {
         // Failure
@@ -107,11 +122,49 @@ const Board = ({
   //  }
   }
 
+  const waitForOpponent = async () => {
+    console.log("WAIT..............................")
 
+    const params = {
+        game_id: game.id,
+        account_id: account.id
+    }
+
+    const resp = await fetch('http://localhost:3010/wait', {
+      method: 'POST',
+      body: JSON.stringify(params), 
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    const data = await resp.json()
+
+    if ( !data ) {
+      alert("WAITING CONNECTION ERROR")
+    }
+
+    if ( data.state === 'CREATED' ) {
+      setTimeout(waitForOpponent, 5000)
+      return
+    }
+
+    if ( data.state === 'STARTED' ) {
+      setGame({
+        ...game,
+        opponent: data.opponent,
+        state: 'STARTED',
+        current_round: 1
+      })
+      setStage(stages.STARTED)
+    } 
+
+  }
 
   const waitForPlayer1 = async (m) => {
 
-    console.log("M:", m)
+    console.log("PLAYER1............................", m)
 
     if (m && m.sender === account.opponent) {
 
@@ -152,7 +205,7 @@ const Board = ({
 
 
   const listenMoves = async () => {
-
+    console.log("LISTEN...................")
     const params = {
         game_id: game.id,
         account_id: account.id,
@@ -182,11 +235,16 @@ const Board = ({
       setMoves(data.player2)
     }
 
+    let _current_round = Math.max(data.player1.length, data.player2.length)
+    if (data.player1.length === data.player2.length) _current_round++
+    if (_current_round > game.rounds) _current_round = game.rounds
+
     setGame({
       ...game,
-      current_round: Math.max(data.player1.length, data.player2.length)
+      current_round: _current_round
     })
-    setTimeout(listenMoves, 5000)
+
+    if (stage === stages.STARTED) setTimeout(listenMoves, 5000)
 
   }
 
@@ -194,7 +252,12 @@ const Board = ({
   const showCards = () => {
 
       let resp = []
-      for(round = 0; round < game.current_round; round++) {
+      for(round = 0; 
+        round < game.current_round && 
+        round <= game.rounds &&
+        ((round < opponentMoves.length && round < moves.length) || game.state === 'STARTED'); 
+        round++) {
+console.log("GSTATE:", game.state)
          resp.push (
             <div className="roundsInfo" key={round}>
               <div className="roundRound">
@@ -207,7 +270,11 @@ const Board = ({
               </div>
               <div className="roundItem">
                 <span className="roundName">OPPONENT</span>
-                <Element element={opponentMoves[round] ? opponentMoves[round].card : null} active={false} />
+                <Element 
+                element={opponentMoves[round] ? opponentMoves[round].card : null} 
+                move={opponentMoves[round] ? opponentMoves[round].move : null}
+                password={opponentMoves[round] ? opponentMoves[round].password : null}
+                active={false} />
               </div>
               <div className="roundWinner">
                 <p>{showWinner(moves[round]?.card, opponentMoves[round]?.card)}</p>
@@ -220,15 +287,20 @@ const Board = ({
 
   useEffect(() => {
     setPassword(generatePassword(14))
-    refSubscriber = HGame.subscribe('messages', waitForPlayer1)
-  }, [ game.round ])
+    // refSubscriber = HGame.subscribe('messages', waitForPlayer1)
+  }, [ game.current_round ])
 
   useEffect(() => {
     console.log("CHECKING STATE:", stage, stages.STARTED)
     if ( stage === stages.STARTED && game.id ) {
       listenMoves()
     }
-  }, [])
+    console.log("CHECKING IF WAIT")
+    if ( stage === stages.CREATED && game.id ) {
+      console.log("WAITING")
+      waitForOpponent()
+    }
+  }, [stage])
 
 
 
@@ -256,34 +328,52 @@ const Board = ({
         </div>
       </div>
 
-      <h2>Round
-      <span className="roundNumber">{game.current_round}</span></h2>
-      { 
-      game.current_round <= game.rounds &&
-        <div className="playerBoard">
-          <h1>Make your move</h1>
-          <div className="selectInfo">
-            <Element element='rock' play={play} active={true} />
-            <Element element='paper' play={play} active={true} />
-            <Element element='scissor' play={play} active={true} />
-            <p>Select rock, paper or scissor</p>
-          </div>
-        </div>
-      }
-      <div className="movesInfo">
+      <Encrypter />
+
       {
-        showCards()
-      }
-      </div>
-
-      { 
-      1==2 &&
-        <div className="passwordInfo">
-          <p>Password to encrypt your move (you can change it)</p>
-          <input className="passwordInput" type="text" value={ password } onChange={ (e) => updatePassword(e) }/>
+        stage === stages.FINISHED &&
+        <div>
+          <h2>GAME FINISHED</h2>
+          <h2>{ (game.winner === 0) ? 'IT IS A DRAW!' : (game.winner === player) ? 'YOU WON THE GAME!' : 'YOU LOSE THE GAME!' }</h2>
         </div>
       }
+      { (stage === stages.STARTED || stage === stages.FINISHED) && // Once game started
+        <div>
+          <h2>Round
+          <span className="roundNumber">{(game.current_round <= game.rounds) ? game.current_round : game.rounds}</span></h2>
+          { 
+          stage === stages.STARTED &&
+            <div className="playerBoard">
+              <h1>Make your move</h1>
+              <div className="selectInfo">
+                <Element element='rock' play={play} active={true} />
+                <Element element='paper' play={play} active={true} />
+                <Element element='scissor' play={play} active={true} />
 
+              </div>
+            </div>
+          }
+          <div className="movesInfo">
+          {
+            showCards()
+          }
+          </div>
+
+          { 
+          stage === stages.STARTED &&
+            <div className="passwordInfo">
+              <p>Password to encrypt your move (you can change it)</p>
+              <input className="passwordInput" type="text" value={ password } onChange={ (e) => updatePassword(e) }/>
+            </div>
+          }
+        </div>
+      }
+      {
+        stage === stages.CREATED && 
+        <div>
+          <h2>Waiting for an opponent to join</h2>
+        </div>
+      }
     </div>
   );
 }

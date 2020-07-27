@@ -1,0 +1,37 @@
+
+.section {
+  display: block;
+}
+
+.section:first-child {
+  margin-top:18px;
+}
+
+.encInput {
+  width: 230px; 
+  padding: 2px 4px;
+  margin: 4px;
+  font-size: 10pt;
+  background-color: #ddd;
+  border: none;
+  color: black;
+}
+
+.encPassword {
+  width: 180px; 
+  padding: 2px 4px;
+  margin: 4px;
+  font-size: 10pt;
+  background-color: #ddd;
+  border: none;
+  color: black;
+}
+
+.encButton {
+
+}
+
+
+.encResult {
+  display: block;
+}

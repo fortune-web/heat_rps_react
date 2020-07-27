@@ -12,13 +12,23 @@ import question from './images/set2/question.png'
 import './Element.css';
 
 
-const Element = ({ element, play, active }) => {
+const Element = ({ element, move, password, play, active }) => {
+
 
   let image
+  let encrypted
+
+  if (!element) return (
+    <div className={'waiting'}>
+    </div>
+  )
   if (element == 'rock') image = rock
   if (element == 'paper') image = paper
   if (element == 'scissor') image = scissor
-  if (element != 'rock' && element != 'paper' && element != 'scissor') element = '?'
+  if (element != 'rock' && element != 'paper' && element != 'scissor') {
+    encrypted = element
+    element = '?'
+  }
   if (element === '?') image = question
 
   return (
@@ -30,6 +40,8 @@ const Element = ({ element, play, active }) => {
         name={element.toUpperCase()} 
         onClick={active ? ()=>play(element) : null}
       />
+      <p>{ move ? move : null }</p>
+      <p>{ password ? password : null }</p>
     </div>
   );
 }

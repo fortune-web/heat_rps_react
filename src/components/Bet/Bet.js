@@ -24,11 +24,15 @@ const Bet = ({ account, bet, enterGame, loadGame }) => {
       <div className="rounds">ROUNDS: {bet.rounds}</div>
       <div>
       {
-        (bet.state === 'CREATED' && bet.account_id != account.id) &&
-        <input className="inputButton" type="button" onClick={() => startGame(bet)} value="START GAME" />
+        (bet.state === 'FINISHED') &&
+          <input className="inputButton" type="button" onClick={() => loadGame(bet)} value="FINISHED" />
         ||
-        <input className="inputButton" type="button" onClick={() => loadGame(bet)} value="CONTINUE GAME" />
-      }
+          (bet.state === 'CREATED' && bet.account_id != account.id) &&
+            <input className="inputButton" type="button" onClick={() => startGame(bet)} value="START GAME" />
+          ||
+          (bet.state === 'STARTED' || (bet.state === 'CREATED' && bet.account_id === account.id)) &&
+            <input className="inputButton" type="button" onClick={() => loadGame(bet)} value="CONTINUE GAME" />
+        }
         
       </div>
     </div>

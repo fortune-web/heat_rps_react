@@ -34,11 +34,11 @@ const Lobby = ({ enterGame, loadGame, account, bets, setBets }) => {
 
       const data = await resp.json()
 
-      if (data && data.length) {
+      if (data) {
         setBets(data)
         console.log("BETS:", data)
       } else {
-        alert("CONNECTION ERROR")
+        alert("BETS CONNECTION ERROR")
       }
     }
     fetchBets()

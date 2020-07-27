@@ -16,8 +16,9 @@
 	text-align: center;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width:180px;
+    width:240px;
 	display: inline-block;
+	vertical-align: top;
 }
 
 .selectInfo {
@@ -52,6 +53,10 @@
 	padding: 2px 12px;
     line-height: 20pt;
     display:block;
+}
+
+.roundName {
+	display: block;
 }
 
 .roundRound {
