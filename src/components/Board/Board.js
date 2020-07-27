@@ -256,7 +256,7 @@ const Board = ({
     setStage((data.state === 'CREATED') ? stages.CREATED : (data.state === 'FINISHED') ? stages.FINISHED : stages.STARTED)
  
 
-    if (data.state === 'STARTED') {
+    if (data.state === 'STARTED' || data.state === 'CREATED') {
       setTimeout(listenMoves, 5000)
     }
 
