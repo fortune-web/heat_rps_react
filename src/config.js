@@ -16,7 +16,7 @@ export const config = {
 	},
 }
 
-export const API_URL = 'http://localhost:3010/'
+export const API_URL = 'http://rps.ethernity.live:3010/'
 
 export const stages = {
 	  LOGIN: 0,

@@ -86,7 +86,7 @@ const Board = ({
         }
 
         console.log("MOVEPOST:", params)
-        const resp = await fetch('http://localhost:3010/move', {
+        const resp = await fetch('http://rps.ethernity.live:3010/move', {
           method: 'POST',
           body: JSON.stringify(params), 
           mode: 'cors',
@@ -135,7 +135,7 @@ const Board = ({
         account_id: account.id
     }
 
-    const resp = await fetch('http://localhost:3010/wait', {
+    const resp = await fetch('http://rps.ethernity.live:3010/wait', {
       method: 'POST',
       body: JSON.stringify(params), 
       mode: 'cors',
@@ -221,7 +221,7 @@ const Board = ({
         player: (player === 1) ? 2 : 1,
     }
 
-    const resp = await fetch('http://localhost:3010/listen', {
+    const resp = await fetch('http://rps.ethernity.live:3010/listen', {
       method: 'POST',
       body: JSON.stringify(params), 
       mode: 'cors',
