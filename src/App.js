@@ -59,7 +59,7 @@ const App = () => {
         opponent_id: account.id,
       }
 
-      const resp = await fetch('http://localhost:3010/start', {
+      const resp = await fetch('http://rps.ethernity.live:3010/start', {
         method: 'POST',
         body: JSON.stringify(params),
         mode: 'cors',
@@ -92,7 +92,7 @@ const App = () => {
         game_id: bet.id,
       }
       console.log("LOADGAME:", params)
-      const resp = await fetch('http://localhost:3010/load', {
+      const resp = await fetch('http://rps.ethernity.live:3010/load', {
         method: 'POST',
         body: JSON.stringify(params),
         mode: 'cors',
