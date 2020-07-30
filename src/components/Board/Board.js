@@ -262,7 +262,8 @@ const Board = ({
     setGame(prevGame => ({
       ...prevGame,
       state: data.state,
-      current_round: _current_round
+      current_round: _current_round,
+      winner: data.winner
     }))
     setStage((data.state === 'CREATED') ? stages.CREATED : (data.state === 'FINISHED') ? stages.FINISHED : stages.STARTED)
  
@@ -273,15 +274,18 @@ const Board = ({
 
   }
 
+  const resetGame = () => {
+    setGame(null)
+    setStage(stages.LOBBY)
+  }
+
   const getName = async (id) => {
-    console.log("IDNAME:", id)
     const account = await HGame.getAccountById(id)
-    console.log("ACCOUNT:", account)
-    console.log("NAME:", account.publicName)
     return account.publicName
   }
 
   const showCards = () => {
+    if (!moves || !opponentMoves) return
     let resp = []
     for(round = 0; 
       round < game.current_round && 
@@ -320,7 +324,6 @@ const Board = ({
 
   useEffect(() => {
     const setOpName = async() => {
-      listenMoves()
       if ( player === 1 ) {
         setOpponentName(await getName(game.opponent) || 'WAITING')
       } else {
@@ -328,7 +331,13 @@ const Board = ({
       }
     }
     setOpName()
-  }, [])
+    listenMoves()
+  }, [game.opponent])
+
+
+  useEffect(() => {
+    
+  }, [moves])
 
   useEffect(() => {
     setPassword(generatePassword(14))
@@ -364,7 +373,7 @@ const Board = ({
           <span className="listData">{game.id}</span>
         </div>
         <div className="listItem">
-          <span className="listName">Opponent Id</span>
+          <span className="listName">Opponent</span>
           <span className="listData">{opponentName}</span>
         </div>
         <div className="listItem">
@@ -378,10 +387,15 @@ const Board = ({
       </div>
 
       <Encrypter />
+      
+      <h2>Welcome <span className='name'>{account.name}</span></h2>
 
+      <p>Game link:</p><p className="gameLink">{`${API_URL}/${game.id}`}</p>
+
+      <button onClick={()=>resetGame()}>BACK TO LOBBY</button> 
       {
         stage === stages.FINISHED &&
-        <div>
+        <div className='finalBoard'>
           <h2>GAME FINISHED</h2>
           <h2>{ (game.winner === 0) ? 'IT IS A DRAW!' : (game.winner === player) ? 'YOU WON THE GAME!' : 'YOU LOSE THE GAME!' }</h2>
         </div>

@@ -83,3 +83,15 @@
 .passwordInput {
 	width:250px;
 }
+
+.gameLink {
+	color:#c3c;
+}
+
+.finalBoard {
+	border:1px rugged #ccc;
+}
+
+.name {
+	color:#c36;
+}

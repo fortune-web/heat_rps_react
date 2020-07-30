@@ -16,34 +16,37 @@ import { config, API_URL } from '../../config.js';
 const Lobby = ({ enterGame, loadGame, account, bets, setBets }) => {
 
   useEffect(() => {
-    const fetchBets = async() => {
-      console.log("ACCC:", account)
-
-      const params = {
-        account_id: account.id
-      }
-
-      const resp = await fetch(API_URL + 'bets', {
-        method: 'POST',
-        body: JSON.stringify(params),
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-
-      const data = await resp.json()
-
-      if (data) {
-        setBets(data)
-        console.log("BETS:", data)
-      } else {
-        alert("BETS CONNECTION ERROR")
-      }
-    }
     fetchBets()
   }, [])
 
+
+  const fetchBets = async() => {
+    console.log("ACCC:", account)
+
+    const params = {
+      account_id: account.id
+    }
+
+    const resp = await fetch(API_URL + 'bets', {
+      method: 'POST',
+      body: JSON.stringify(params),
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    const data = await resp.json()
+
+    if (data) {
+      setBets(data)
+      console.log("BETS:", data)
+    } else {
+      alert("BETS CONNECTION ERROR")
+    }
+
+    setTimeout(fetchBets,5000)
+  }
 
 const createGame = async () => {
 
@@ -89,7 +92,9 @@ const createGame = async () => {
 }
 
   return (
+
     <div className="Lobby">
+    <h2>Welcome <span className='name'>{account.name}</span></h2>
     { 
     bets && bets.length > 0 && 
       bets.map((bet) => {

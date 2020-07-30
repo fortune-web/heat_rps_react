@@ -135,7 +135,6 @@ const App = () => {
     setStage(stages.LOBBY) // 1
   }
 
-
   useEffect(() => { async function getAccount() {
       const gameData = await HGame.getAccountBySecret(account.secret)
       console.log("ACC:", gameData)
