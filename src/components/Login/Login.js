@@ -18,9 +18,7 @@ const Login = ({ account, setAccount, setStage, changeAccount }) => {
   const updateAccount = () => {
     setAccount(
       {
-        name: document.getElementById('name').value,
         secret: document.getElementById('secret').value,
-        id: document.getElementById('id').value
       })
   }
 
@@ -32,13 +30,7 @@ const Login = ({ account, setAccount, setStage, changeAccount }) => {
   
       <p>Your account</p>
       <p>
-      <input placeholder="Account Name (email)" id="name" type="text" className="inpName" onChange={()=>updateAccount()} value={account.name || ''} />
-      </p>
-      <p>
       <input placeholder="Secret phrase" id="secret" type="text" className="inpSecret" onChange={()=>updateAccount()} value={account.secret || ''} /> 
-      </p>
-      <p>
-      <input placeholder="Id" id="id" type="text" className="inpId" onChange={()=>updateAccount()} value={account.id || ''} /> 
       </p>
       <p><input type="button" onClick={() => setStage(stages.LOBBY)} value="ENTER" /></p>
     </div>

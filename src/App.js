@@ -6,7 +6,10 @@ import React, {
   useLayoutEffect,
 } from 'react';
 
-import { config, stages } from './config.js';
+// heat Game Library
+import HGame from '@ethernity/heat-games';
+
+import { config, stages, API_URL } from './config.js';
 
 import './App.css';
 import Login from './components/Login/Login';
@@ -38,15 +41,11 @@ const App = () => {
 
     if ( acc === 1 ) {
       setAccount({
-        name: config.ACCOUNT.NAME,
         secret: config.ACCOUNT.SECRET,
-        id: config.ACCOUNT.ID,
       })
     } else {
       setAccount({
-        name: config.ACCOUNT2.NAME,
         secret: config.ACCOUNT2.SECRET,
-        id: config.ACCOUNT2.ID,
       }) 
     }
   }
@@ -59,7 +58,7 @@ const App = () => {
         opponent_id: account.id,
       }
 
-      const resp = await fetch('http://rps.ethernity.live:3010/start', {
+      const resp = await fetch(API_URL + 'start', {
         method: 'POST',
         body: JSON.stringify(params),
         mode: 'cors',
@@ -92,7 +91,7 @@ const App = () => {
         game_id: bet.id,
       }
       console.log("LOADGAME:", params)
-      const resp = await fetch('http://rps.ethernity.live:3010/load', {
+      const resp = await fetch(API_URL + 'load', {
         method: 'POST',
         body: JSON.stringify(params),
         mode: 'cors',
@@ -135,6 +134,20 @@ const App = () => {
     setMoves([])
     setStage(stages.LOBBY) // 1
   }
+
+
+  useEffect(() => { async function getAccount() {
+      const gameData = await HGame.getAccountBySecret(account.secret)
+      console.log("ACC:", gameData)
+      setAccount(newAcc=>({
+        secret: newAcc.secret,
+        id: gameData.id,
+        name: gameData.publicName
+      }))
+    }
+    getAccount()
+  }, [account.secret])
+
 
   // console.log("GAME:", game)
   return (

@@ -16,7 +16,7 @@ import Element from '../Element/Element';
 import Encrypter from '../Encrypter/Encrypter';
 
 import './Board.css';
-import { stages } from '../../config.js';
+import { stages, API_URL } from '../../config.js';
 
 import crypto from 'crypto';
 
@@ -31,8 +31,10 @@ const Board = ({
   player
 }) => {
 
-  const [ waiting, setWaiting ] = useState(false)
+  const [ waiting, setWaiting ] = useState(false) // To wait for the own move to be sent
   const [ password, setPassword ] = useState('')
+  const [ opponentName, setOpponentName ] = useState('WAITING')
+
   var refSubscriber = useRef(null)
 
   const play = async (element) => {
@@ -40,9 +42,17 @@ const Board = ({
     console.log("PLAY........................")
     if ( element === '?' ) return
 
-    if ( game.current_round < moves.length ) {
-      alert("Wait for your opponent move")
+    if ( game.current_round <= moves.length ) {
+      alert("Wait for your opponent to move")
+      return
     }
+
+    if ( waiting ) {
+      alert("We are sending your move to the blockchain")
+      return
+    }
+
+    setWaiting(true)
 
     // if ( player === 2 ) {
       let message = HGame.aesEncrypt(element, password)
@@ -60,6 +70,7 @@ const Board = ({
       console.log("DATA:", data)
 
       if ( data && data.errorCode ) {
+        setWaiting(false)
         alert(data.errorDescription)
         return
       }
@@ -86,7 +97,7 @@ const Board = ({
         }
 
         console.log("MOVEPOST:", params)
-        const resp = await fetch('http://rps.ethernity.live:3010/move', {
+        const resp = await fetch(API_URL + 'move', {
           method: 'POST',
           body: JSON.stringify(params), 
           mode: 'cors',
@@ -97,7 +108,6 @@ const Board = ({
 
         console.log("MOVED:", resp)
         if(resp && resp.ok) {
-          setWaiting(true)
 
           const data = await resp.json()
 
@@ -117,9 +127,10 @@ const Board = ({
         } else {
           alert("MOVE CONNECTION ERROR")
         }
-
+        setWaiting(false)
       } else {
         // Failure
+        setWaiting(false)
         alert("There was an error trying to broadcast the move")
         return
       }
@@ -135,7 +146,7 @@ const Board = ({
         account_id: account.id
     }
 
-    const resp = await fetch('http://rps.ethernity.live:3010/wait', {
+    const resp = await fetch(API_URL + 'wait', {
       method: 'POST',
       body: JSON.stringify(params), 
       mode: 'cors',
@@ -221,7 +232,7 @@ const Board = ({
         player: (player === 1) ? 2 : 1,
     }
 
-    const resp = await fetch('http://rps.ethernity.live:3010/listen', {
+    const resp = await fetch(API_URL + 'listen', {
       method: 'POST',
       body: JSON.stringify(params), 
       mode: 'cors',
@@ -262,9 +273,15 @@ const Board = ({
 
   }
 
+  const getName = async (id) => {
+    console.log("IDNAME:", id)
+    const account = await HGame.getAccountById(id)
+    console.log("ACCOUNT:", account)
+    console.log("NAME:", account.publicName)
+    return account.publicName
+  }
 
   const showCards = () => {
-
     let resp = []
     for(round = 0; 
       round < game.current_round && 
@@ -302,7 +319,15 @@ const Board = ({
   }
 
   useEffect(() => {
-    listenMoves()
+    const setOpName = async() => {
+      listenMoves()
+      if ( player === 1 ) {
+        setOpponentName(await getName(game.opponent) || 'WAITING')
+      } else {
+        setOpponentName(await getName(game.account_id))
+      }
+    }
+    setOpName()
   }, [])
 
   useEffect(() => {
@@ -340,7 +365,7 @@ const Board = ({
         </div>
         <div className="listItem">
           <span className="listName">Opponent Id</span>
-          <span className="listData">{player === 1 ? (game.opponent || 'WAITING') : game.account_id}</span>
+          <span className="listData">{opponentName}</span>
         </div>
         <div className="listItem">
           <span className="listName">Bet amount</span>

@@ -11,7 +11,7 @@ import httpClient from '../../helpers/axios';
 import Bet from '../Bet/Bet';
 
 import './Lobby.css';
-import { config } from '../../config.js';
+import { config, API_URL } from '../../config.js';
 
 const Lobby = ({ enterGame, loadGame, account, bets, setBets }) => {
 
@@ -23,7 +23,7 @@ const Lobby = ({ enterGame, loadGame, account, bets, setBets }) => {
         account_id: account.id
       }
 
-      const resp = await fetch('http://rps.ethernity.live:3010/bets', {
+      const resp = await fetch(API_URL + 'bets', {
         method: 'POST',
         body: JSON.stringify(params),
         mode: 'cors',
@@ -59,7 +59,7 @@ const createGame = async () => {
     formData.append('acount_id', params.account_id)
 
     console.log("PREVBET:", params)
-    const resp = await fetch('http://rps.ethernity.live:3010/bet', {
+    const resp = await fetch(API_URL + 'bet', {
       method: 'POST',
       body: JSON.stringify(params),
       mode: 'cors',
