@@ -37,6 +37,9 @@ const Board = ({
 
   var refSubscriber = useRef(null)
 
+  var listenTimeout
+  var waitTimeout
+
   const play = async (element) => {
 
     console.log("PLAY........................")
@@ -162,7 +165,7 @@ const Board = ({
     }
 
     if ( data.state === 'CREATED' ) {
-      setTimeout(waitForOpponent, 5000)
+      waitTimeout = setTimeout(waitForOpponent, 5000)
       return
     }
 
@@ -269,7 +272,7 @@ const Board = ({
  
 
     if (data.state === 'STARTED' || data.state === 'CREATED') {
-      setTimeout(listenMoves, 5000)
+      listenTimeout = setTimeout(listenMoves, 5000)
     }
 
   }
@@ -336,8 +339,11 @@ const Board = ({
 
 
   useEffect(() => {
-    
-  }, [moves])
+    return () => {
+      clearTimeout(listenTimeout)
+      clearTimeout(waitTimeout)
+    }
+  }, [])
 
   useEffect(() => {
     setPassword(generatePassword(14))
@@ -389,8 +395,6 @@ const Board = ({
       <Encrypter />
       
       <h2>Welcome <span className='name'>{account.name}</span></h2>
-
-      <p>Game link:</p><p className="gameLink">{`${API_URL}/${game.id}`}</p>
 
       <button onClick={()=>resetGame()}>BACK TO LOBBY</button> 
       {

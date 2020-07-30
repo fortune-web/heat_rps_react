@@ -171,6 +171,7 @@ const App = () => {
           setAccount={setAccount}
           bets={bets}
           setBets={setBets}
+          stage={stage}
         />
       }
       {

@@ -89,7 +89,12 @@
 }
 
 .finalBoard {
-	border:1px rugged #ccc;
+    border: 5px #ccc;
+    border-style: dotted;
+    width: 300px;
+    margin: auto;
+    background: #333;
+    margin-top: 12px;
 }
 
 .name {

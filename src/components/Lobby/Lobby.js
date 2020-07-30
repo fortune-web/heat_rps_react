@@ -11,12 +11,17 @@ import httpClient from '../../helpers/axios';
 import Bet from '../Bet/Bet';
 
 import './Lobby.css';
-import { config, API_URL } from '../../config.js';
+import { config, stages, API_URL } from '../../config.js';
 
-const Lobby = ({ enterGame, loadGame, account, bets, setBets }) => {
+const Lobby = ({ enterGame, loadGame, account, bets, stage, setBets }) => {
 
+  var betsTimeout
+  
   useEffect(() => {
     fetchBets()
+    return () => {
+      clearTimeout(betsTimeout)
+    }
   }, [])
 
 
@@ -45,7 +50,7 @@ const Lobby = ({ enterGame, loadGame, account, bets, setBets }) => {
       alert("BETS CONNECTION ERROR")
     }
 
-    setTimeout(fetchBets,5000)
+    betsTimeout = setTimeout(fetchBets,5000)
   }
 
 const createGame = async () => {
