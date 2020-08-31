@@ -67,7 +67,7 @@ const createGame = async () => {
     formData.append('acount_id', params.account_id)
 
     console.log("PREVBET:", params)
-    const resp = await fetch(API_URL + 'bet', {
+    const resp = await fetch(API_URL + 'paid', {
       method: 'POST',
       body: JSON.stringify(params),
       mode: 'cors',
