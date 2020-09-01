@@ -1,0 +1,102 @@
+.Payment {
+  text-align: center;
+  display: inline-block;
+  margin: 8px;
+  margin-top: 20px;
+}
+
+
+.gameInfo {
+	text-align: center;
+    background: rgb(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.roundsInfo {
+	text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width:240px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.selectInfo {
+	margin-top:28px;
+	transform:scale(1.2);
+}
+
+.listItem {
+	padding: 2px 12px;
+    line-height: 20pt;
+    display:inline-block;
+}
+
+.listItem:not(:last-child) {
+	border-right: 1px solid rgb(255, 255, 255, 0.1);
+}
+
+.listName {
+	font-weight: bold;
+	margin-right: 12px;
+	display: block;
+	position: relative;
+	width:180px;
+	z-index:10;
+}
+
+.listData {
+	line-height:18pt;
+}
+
+.roundItem {
+	padding: 2px 12px;
+    line-height: 20pt;
+    display:block;
+}
+
+.roundName {
+	display: block;
+}
+
+.roundRound {
+	font-weight: bold;
+	font-size:17pt;
+	margin-right: 12px;
+	display: block;
+	position: relative;
+	z-index:10;
+}
+
+.roundNumber {
+	color: #e6c960;
+    display: block;
+    font-size: 34pt;
+    line-height: 34pt;
+}
+
+.roundWinner {
+	font-size:18pt;
+	font-weight: bold;
+}
+
+.passwordInput {
+	width:250px;
+}
+
+.gameLink {
+	color:#c3c;
+}
+
+.finalBoard {
+    border: 5px #ccc;
+    border-style: dotted;
+    width: 300px;
+    margin: auto;
+    background: #333;
+    margin-top: 12px;
+}
+
+.name {
+	color:#c36;
+}

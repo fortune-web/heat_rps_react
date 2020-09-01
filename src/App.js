@@ -17,11 +17,12 @@ import Lobby from './components/Lobby/Lobby';
 import Board from './components/Board/Board';
 import Waiting from './components/Waiting/Waiting';
 import Results from './components/Results/Results';
+import Payment from './components/Payment/Payment';
 
 
 const App = () => {
 
-  const [ stage, setStage ] = useState(stages.LOGIN);
+  const [ stage, setStage ] = useState(stages.LOBBY);
   const [ moves, setMoves ] = useState([]);
   const [ opponentMoves, setOpponentMoves ] = useState([]);
   const [ player, setPlayer ] = useState(null);
@@ -51,7 +52,7 @@ const App = () => {
   }
 
   const enterGame = async (data) => {
-    if ( data.state === 'CREATED' ) {
+    if ( data.status === 'CREATED' ) {
 
       const params = {
         game_id: data.id,
@@ -78,10 +79,10 @@ const App = () => {
       opponent: account.id,
       rounds: data.rounds,
       amount: data.amount,
-      state: data.state,
+      status: data.status,
       current_round: 1
     })
-    setStage((data.state === 'CREATED') ? stages.CREATED : (data.state === 'FINISHED') ? stages.FINISHED : stages.STARTED)
+    setStage((data.status === 'CREATED') ? stages.CREATED : (data.status === 'FINISHED') ? stages.FINISHED : stages.STARTED)
     
   }
 
@@ -120,10 +121,10 @@ const App = () => {
           opponent: data.opponent,
           rounds: data.rounds,
           amount: data.amount,
-          state: data.state,
+          status: data.status,
           current_round: 1
         })
-        setStage((data.state === 'CREATED') ? stages.CREATED : (data.state === 'FINISHED') ? stages.FINISHED : stages.STARTED) 
+        setStage((data.status === 'CREATED') ? stages.CREATED : (data.status === 'FINISHED') ? stages.FINISHED : stages.STARTED) 
       }
 
   }
@@ -136,13 +137,15 @@ const App = () => {
   }
 
   useEffect(() => { async function getAccount() {
-      const gameData = await HGame.getAccountBySecret(account.secret)
-      console.log("ACC:", gameData)
-      setAccount(newAcc=>({
-        secret: newAcc.secret,
-        id: gameData.id,
-        name: gameData.publicName
-      }))
+      if (account.secret) {
+        const gameData = await HGame.getAccountBySecret(account.secret)
+        console.log("ACC:", gameData)
+        setAccount(newAcc=>({
+          secret: newAcc.secret,
+          id: gameData.id,
+          name: gameData.publicName
+        }))
+      }
     }
     getAccount()
   }, [account.secret])
@@ -167,15 +170,30 @@ const App = () => {
         <Lobby 
           enterGame={enterGame}
           loadGame={loadGame}
-          account={account}
-          setAccount={setAccount}
           bets={bets}
           setBets={setBets}
           stage={stage}
+          setStage={setStage}
+          game={game}
+          setGame={setGame}
         />
       }
       {
-        (stage === stages.STARTED || stage === stages.CREATED || stage === stages.FINISHED) && // 2
+        stage === stages.CREATED && // 1
+        <Payment 
+          enterGame={enterGame}
+          account={account}
+          setAccount={setAccount}
+          setStage={setStage}
+          bets={bets}
+          setBets={setBets}
+          stage={stage}
+          setGame={setGame}
+          game={game}
+        />
+      }      
+      {
+        (stage === stages.STARTED || stage === stages.FINISHED) && // 2
         <Board 
           stage={stage}
           setStage={setStage} 

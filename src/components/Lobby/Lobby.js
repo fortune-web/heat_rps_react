@@ -13,7 +13,7 @@ import Bet from '../Bet/Bet';
 import './Lobby.css';
 import { config, stages, API_URL } from '../../config.js';
 
-const Lobby = ({ enterGame, loadGame, account, bets, stage, setBets }) => {
+const Lobby = ({ enterGame, loadGame, account, bets, stage, setStage, setBets, game, setGame }) => {
 
   var betsTimeout
   
@@ -26,10 +26,9 @@ const Lobby = ({ enterGame, loadGame, account, bets, stage, setBets }) => {
 
 
   const fetchBets = async() => {
-    console.log("ACCC:", account)
 
     const params = {
-      account_id: account.id
+      filter: 'all'
     }
 
     const resp = await fetch(API_URL + 'bets', {
@@ -58,16 +57,15 @@ const createGame = async () => {
     const params = {
       amount: document.getElementById('amount').value,
       rounds: document.getElementById('rounds').value,
-      account_id: account.id
+      private: document.getElementById('private').value,
     }
     
     const formData = new FormData()
     formData.append('amount', params.amount)
     formData.append('rounds', params.rounds)
-    formData.append('acount_id', params.account_id)
+    formData.append('private', params.private)
 
-    console.log("PREVBET:", params)
-    const resp = await fetch(API_URL + 'paid', {
+    const resp = await fetch(API_URL + 'createGame', {
       method: 'POST',
       body: JSON.stringify(params),
       mode: 'cors',
@@ -82,14 +80,24 @@ const createGame = async () => {
 
     if (data) {
       const bet = {
-        id: data.insertId,
+        id: data.game_id,
+        game_pin: data.game_pin,
         amount: params.amount,
         rounds: params.rounds,
-        account_id: account.id,
-        state: 'CREATED'
+        private: params.private,
+        status: 'CREATED'
       }
       setBets(bet)
-      loadGame(bet)
+      setGame({
+          id: data.game_id,
+          pin: data.game_pin,
+          rounds: params.rounds,
+          amount: params.amount,
+          status: 'CREATED',
+          current_round: 1
+      })
+      // loadGame(bet)
+      setStage(stages.CREATED)
     } else {
       alert("CONNECTION ERROR")
     }
@@ -99,13 +107,11 @@ const createGame = async () => {
   return (
 
     <div className="Lobby">
-    <h2>Welcome <span className='name'>{account.name}</span></h2>
     { 
     bets && bets.length > 0 && 
       bets.map((bet) => {
         return <Bet 
           bet={bet}
-          account={account}
           enterGame={enterGame}
           loadGame={loadGame}
           />
@@ -116,9 +122,15 @@ const createGame = async () => {
       </p>
       <p>
       <select id="rounds" type="text" className="inpRounds" >
-      <option value="5">Short (5 rounds)</option>
-      <option value="10">Long (10 rounds)</option>
+        <option value="5">Short (5 rounds)</option>
+        <option value="10">Long (10 rounds)</option>
       </select> 
+      <div>
+        <select id="private" type="text" className="inpRounds" >
+          <option value="private">Private</option>
+          <option value="public" selected>Public</option>
+        </select> 
+      </div>
       </p>
     <p><input className="inputButton" type="button" onClick={() => createGame()} value="MAKE BET" /></p>
     </div>

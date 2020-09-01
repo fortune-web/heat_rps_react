@@ -121,7 +121,7 @@ const Board = ({
             setStage(stages.FINISHED)
             setGame(prevGame => ({
               ...prevGame,
-              state: 'FINISHED',
+              status: 'FINISHED',
               winner: data.winner
             }))
           }
@@ -164,16 +164,16 @@ const Board = ({
       alert("WAITING CONNECTION ERROR")
     }
 
-    if ( data.state === 'CREATED' ) {
+    if ( data.status === 'CREATED' ) {
       waitTimeout = setTimeout(waitForOpponent, 5000)
       return
     }
 
-    if ( data.state === 'STARTED' ) {
+    if ( data.status === 'STARTED' ) {
       setGame(prevGame => ({
         ...prevGame,
         opponent: data.opponent,
-        state: 'STARTED',
+        status: 'STARTED',
         current_round: 1
       }))
       setStage(stages.STARTED)
@@ -259,19 +259,19 @@ const Board = ({
     }
 
     let _current_round = Math.max(data.player1.length, data.player2.length)
-    if (data.player1.length === data.player2.length && data.state !== 'FINISHED') _current_round++
+    if (data.player1.length === data.player2.length && data.status !== 'FINISHED') _current_round++
     if (_current_round > game.rounds) _current_round = game.rounds
 
     setGame(prevGame => ({
       ...prevGame,
-      state: data.state,
+      status: data.status,
       current_round: _current_round,
       winner: data.winner
     }))
-    setStage((data.state === 'CREATED') ? stages.CREATED : (data.state === 'FINISHED') ? stages.FINISHED : stages.STARTED)
+    setStage((data.status === 'CREATED') ? stages.CREATED : (data.status === 'FINISHED') ? stages.FINISHED : stages.STARTED)
  
 
-    if (data.state === 'STARTED' || data.state === 'CREATED') {
+    if (data.status === 'STARTED' || data.status === 'CREATED') {
       listenTimeout = setTimeout(listenMoves, 5000)
     }
 
@@ -293,10 +293,10 @@ const Board = ({
     for(round = 0; 
       round < game.current_round && 
       round <= game.rounds &&
-      ((round < opponentMoves.length && round < moves.length) || game.state === 'STARTED'); 
+      ((round < opponentMoves.length && round < moves.length) || game.status === 'STARTED'); 
       round++) {
       
-      console.log("GSTATE:", game.state)
+      console.log("Gstatus:", game.status)
 
         resp.push (
           <div className="roundsInfo" key={round}>
@@ -355,7 +355,7 @@ const Board = ({
   }, [ game ])
 
   useEffect(() => {
-    console.log("CHECKING STATE:", stage, stages.STARTED)
+    console.log("CHECKING status:", stage, stages.STARTED)
     if ( stage === stages.STARTED && game.id ) {
       // listenMoves()
     }

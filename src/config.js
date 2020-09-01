@@ -16,6 +16,8 @@ export const config = {
 	},
 }
 
+export const mainAccount = '6768971178720561498';
+
 export const API_URL = 'http://localhost:3010/'; // 'http://rps.ethernity.live:3010/''
 
 export const stages = {
