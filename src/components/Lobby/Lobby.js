@@ -79,21 +79,21 @@ const createGame = async () => {
     console.log("CREATEGAME:", data)
 
     if (data) {
-      const bet = {
+/*      const bet = {
         id: data.game_id,
         game_pin: data.game_pin,
         amount: params.amount,
         rounds: params.rounds,
         private: params.private,
-        status: 'CREATED'
-      }
-      setBets(bet)
+        status: data.status
+      }*/
+     // setBets(bet)
       setGame({
           id: data.game_id,
           pin: data.game_pin,
           rounds: params.rounds,
           amount: params.amount,
-          status: 'CREATED',
+          status: 'FUNDED',
           current_round: 1
       })
       // loadGame(bet)

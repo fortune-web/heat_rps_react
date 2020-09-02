@@ -25,8 +25,7 @@ export const stages = {
 	  LOBBY: 1,
 	  CREATED: 2,
 	  STARTED: 3,
-	  WAITING_FOR_FIRST: 3,
-	  WAITING_FOR_SECOND: 4,
+	  FUNDED: 4,
 	  RESULTS: 5,
 	  FINISHED: 6
 	}

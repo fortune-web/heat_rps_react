@@ -52,11 +52,19 @@ const App = () => {
   }
 
   const enterGame = async (data) => {
-    if ( data.status === 'CREATED' ) {
+    setGame({
+      id: data.id,
+      pin: data.game_pin,
+      rounds: data.rounds,
+      amount: data.amount,
+      status: data.status
+    }) 
+    setStage(stages.CREATED);
+    return
 
       const params = {
         game_id: data.id,
-        opponent_id: account.id,
+        password: account.password,
       }
 
       const resp = await fetch(API_URL + 'start', {
@@ -69,8 +77,6 @@ const App = () => {
       })
 
       console.log("STARTED:", resp)
-    }
-
 
     setPlayer(2)
     setGame({
@@ -190,8 +196,25 @@ const App = () => {
           stage={stage}
           setGame={setGame}
           game={game}
+          enterGame={enterGame}
+          setPlayer={setPlayer}
         />
-      }      
+      }  
+      {
+        stage === stages.NOTHING && // 1
+        <Waiting 
+          enterGame={enterGame}
+          account={account}
+          setAccount={setAccount}
+          setStage={setStage}
+          bets={bets}
+          setBets={setBets}
+          stage={stage}
+          setGame={setGame}
+          game={game}
+          enterGame={enterGame}
+        />
+      }     
       {
         (stage === stages.STARTED || stage === stages.FINISHED) && // 2
         <Board 
