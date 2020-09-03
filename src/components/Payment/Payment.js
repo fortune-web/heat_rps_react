@@ -62,8 +62,8 @@ const Payment = ({
     }
 
     if ( data.status === "OK") {
-      setGame((prev)=>({
-        ...prev,
+      setGame(prevGame=>({
+        ...prevGame,
         password: data.password,
         account_id: data.account_id,
         status: 'FUNDED'
@@ -107,11 +107,12 @@ const Payment = ({
     }
 
     if (data.status = 'STARTED') {
-      setGame({
+      setGame(prevGame=>({
+        ...prevGame,
         opponent_id: data.account_id2,
         opponent_name: data.account_name2,
         status: 'STARTED'
-      })
+      }))
       setStage(stages.STARTED)
     }
   }
@@ -162,19 +163,20 @@ const Payment = ({
       </div>
 {
   game.status === 'FUNDED' &&
-  <h2>Game is funded. Waiting for an opponent to bet</h2>
+  <h2 className="gameAdvice">Game is funded. Waiting for an opponent to bet</h2>
 }
 {
   game.status === 'CREATED' && 
-  <h2>Game is waiting for funds. Make your bet to start the game</h2>
+  <h2 className="gameAdvice">Game is waiting for funds. Make your bet to start the game</h2>
 }
       <h2>To make your bet, send {game.amount} HEAT to the account:</h2>
-
       <div className="mainAccount">{mainAccount}</div>
-
+      <h2>With the message:</h2>
+      <div className="mainAccount">{game.id}</div>
+      <h2>After that, press the button:</h2>
       <button onClick={()=>paid()}>PAYMENT MADE</button> 
 
-      <h2>Or login if you already have a password</h2>
+      <h2 className="loginAdvice">Or login if you already have a password</h2>
       <input placeholder="Password" id="password" type="text" className="inpPassword" onChange={()=>updatePassword()} value={account.password} /> 
       <button onClick={()=>enterGame(game.id)}>ENTER</button>
       {

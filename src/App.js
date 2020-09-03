@@ -130,7 +130,11 @@ const App = () => {
           status: data.status,
           current_round: 1
         })
-        setStage((data.status === 'CREATED') ? stages.CREATED : (data.status === 'FINISHED') ? stages.FINISHED : stages.STARTED) 
+        setStage(
+          (data.status === 'STARTED') ? stages.STARTED : 
+          (data.status === 'FINISHED') ? stages.FINISHED : 
+          (data.status === 'FUNDED') ? stages.FUNDED : null
+        ) 
       }
 
   }

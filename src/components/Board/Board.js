@@ -249,6 +249,7 @@ const Board = ({
       alert("LISTENING CONNECTION ERROR")
     }
 
+    console.log("LISTEN:", data)
     if (player === 1) {
       setOpponentMoves(data.player2)
       setMoves(data.player1)
