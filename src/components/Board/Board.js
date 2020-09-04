@@ -231,7 +231,7 @@ const Board = ({
 
     const params = {
         game_id: game.id,
-        password: password,
+        password: account.password,
     }
 
     const resp = await fetch(API_URL + 'listen', {

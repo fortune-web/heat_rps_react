@@ -61,12 +61,21 @@ const Payment = ({
       return
     }
 
+    if ( data.status !== 'OK' ) {
+      alert("ERROR: " + data.error)
+      return
+    }
+
+
     if ( data.status === "OK") {
       setGame(prevGame=>({
         ...prevGame,
-        password: data.password,
+        game_pin: data.pin,
+        player: data.player,
         account_id: data.account_id,
-        status: 'FUNDED'
+        opponent_id: data.opponent_id,
+        opponent_name: data.opponent_name,
+        status: data.player === 1 ? 'FUNDED' : 'STARTED'
       }))
       setAccount({
         id: data.account_id,
@@ -74,8 +83,8 @@ const Payment = ({
         password: data.password
       })
 
+      setPlayer(data.player)
       setStage(stages.FUNDED)
-      setPlayer(1)
     }
 
   }
@@ -106,7 +115,7 @@ const Payment = ({
       return
     }
 
-    if (data.status = 'STARTED') {
+    if (data.status === 'STARTED') {
       setGame(prevGame=>({
         ...prevGame,
         opponent_id: data.account_id2,
@@ -131,10 +140,11 @@ const Payment = ({
 
 
   const updatePassword = () => {
-    setAccount(
+    setAccount((account)=>(
       {
+        ...account,
         password: document.getElementById('password').value,
-      })
+      }))
   }
     console.log("game:", game)
   // console.log("MOVES:", moves)
@@ -169,16 +179,20 @@ const Payment = ({
   game.status === 'CREATED' && 
   <h2 className="gameAdvice">Game is waiting for funds. Make your bet to start the game</h2>
 }
+{
+  (game.status === 'FUNDED' || game.status === 'CREATED') &&
+  <div>
       <h2>To make your bet, send {game.amount} HEAT to the account:</h2>
       <div className="mainAccount">{mainAccount}</div>
       <h2>With the message:</h2>
       <div className="mainAccount">{game.id}</div>
       <h2>After that, press the button:</h2>
       <button onClick={()=>paid()}>PAYMENT MADE</button> 
-
-      <h2 className="loginAdvice">Or login if you already have a password</h2>
+  </div>
+}
+      <h2 className="loginAdvice">If you already have a password, login:</h2>
       <input placeholder="Password" id="password" type="text" className="inpPassword" onChange={()=>updatePassword()} value={account.password} /> 
-      <button onClick={()=>enterGame(game.id)}>ENTER</button>
+      <button onClick={(e)=>enterGame(game)}>ENTER</button>
       {
         stage === stages.FINISHED &&
         <div className='finalBoard'>

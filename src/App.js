@@ -52,20 +52,22 @@ const App = () => {
   }
 
   const enterGame = async (data) => {
-    setGame({
-      id: data.id,
-      pin: data.game_pin,
-      rounds: data.rounds,
-      amount: data.amount,
-      status: data.status
-    }) 
-    setStage(stages.CREATED);
-    return
+
+    if (!account.password) {
+      setGame({
+        id: data.id,
+        status: 'CREATED'
+      })
+      setStage(stages.CREATED)
+      return
+    }
 
       const params = {
         game_id: data.id,
         password: account.password,
       }
+
+      console.log("LOAD:", params)
 
       const resp = await fetch(API_URL + 'start', {
         method: 'POST',
@@ -109,32 +111,13 @@ const App = () => {
 
       const data = await resp.json()
       console.log("LOADED:", data)
-      console.log("RESP:", resp)
 
       if (resp.ok) {
-
-        if (data.account_id !== account.id) {
-          console.log("EQ ACCOUNTS:")
-          enterGame(data)
-          return
-        }
-
-        console.log("DIFF ACCOUNTS:")
-        setPlayer(1)
         setGame({
-          id: data.id,
-          account_id: data.account_id,
-          opponent: data.opponent,
-          rounds: data.rounds,
-          amount: data.amount,
-          status: data.status,
-          current_round: 1
+          id: bet.id,
+          status: 'LOGIN'
         })
-        setStage(
-          (data.status === 'STARTED') ? stages.STARTED : 
-          (data.status === 'FINISHED') ? stages.FINISHED : 
-          (data.status === 'FUNDED') ? stages.FUNDED : null
-        ) 
+        setStage(stages.LOGIN) 
       }
 
   }
@@ -166,15 +149,14 @@ const App = () => {
     <div className="App">
       <div className="container">
       {
-
-        stage === stages.LOGIN && // 0
+/*        stage === stages.LOGIN && // 0
         <Login
           account={account}
           setAccount={setAccount}
           setStage={setStage}
           changeAccount={changeAccount}
         />
-      }
+*/      }
       {
         stage === stages.LOBBY && // 1
         <Lobby 
@@ -189,7 +171,7 @@ const App = () => {
         />
       }
       {
-        stage === stages.CREATED && // 1
+        (stage === stages.CREATED || stage === stages.LOGIN) && // 1
         <Payment 
           enterGame={enterGame}
           account={account}
