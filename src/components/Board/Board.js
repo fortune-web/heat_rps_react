@@ -58,29 +58,12 @@ const Board = ({
 
     setWaiting(true)
 
-    // if ( player === 2 ) {
-      let message = HGame.aesEncrypt(element, password)
-      message = JSON.stringify({
-        move: message
-      })
-      const vars = {
-        card: message,
-        account: account,
-        opponent: game.opponent_id,
-      }
-      console.log("VARS:", vars)
+    let message = HGame.aesEncrypt(element, password)
 
-      const data = await HGame.makeMove(vars);
-      console.log("DATA:", data)
+    let messageJson = JSON.stringify({
+      move: message
+    })
 
-      if ( data && data.errorCode ) {
-        setWaiting(false)
-        alert(data.errorDescription)
-        return
-      }
-
-      if ( data && data.broadcasted ) {
-        // Success, move sent
         let _moves = moves;
         _moves.push({
           card: element,
@@ -92,12 +75,12 @@ const Board = ({
         const params = {
           game_id: game.id,
           account_id: account.id,
-          move: message,
+          account_password: account.password,
+          move: messageJson,
           password: password,
           round: game.current_round,
           player,
           card: element,
-          blockchain_hash: data.fullHash
         }
 
         console.log("MOVEPOST:", params)
@@ -132,14 +115,7 @@ const Board = ({
           alert("MOVE CONNECTION ERROR")
         }
         setWaiting(false)
-      } else {
-        // Failure
-        setWaiting(false)
-        alert("There was an error trying to broadcast the move")
-        return
-      }
 
-  //  }
   }
 
   const waitForOpponent = async () => {
@@ -233,7 +209,8 @@ const Board = ({
 
     const params = {
         game_id: game.id,
-        password: account.password,
+        player: game.player,
+        account_password: account.password,
     }
 
     const resp = await fetch(API_URL + 'listen', {
