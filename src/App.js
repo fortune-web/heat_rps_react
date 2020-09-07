@@ -51,11 +51,15 @@ const App = () => {
     }
   }
 
-  const enterGame = async (id) => {
+  const enterGame = async (game) => {
 
     if (!account.password) {
       setGame({
-        id: id,
+        id: game.id,
+        amount: game.amount,
+        opponent_name: 'WAITING',
+        opponent_id: '-',
+        rounds: game.rounds,
         status: 'CREATED'
       })
       setStage(stages.CREATED)
@@ -63,7 +67,7 @@ const App = () => {
     }
 
       const params = {
-        game_id: id,
+        game_id: game.id,
         password: account.password,
       }
 
@@ -189,7 +193,7 @@ const App = () => {
         />
       }
       {
-        (stage === stages.CREATED || stage === stages.LOGIN) && // 1
+        (stage === stages.CREATED || stage == stages.FUNDED || stage === stages.LOGIN ) && // 1
         <Payment 
           enterGame={enterGame}
           account={account}

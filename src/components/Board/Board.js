@@ -61,6 +61,7 @@ const Board = ({
     let message = HGame.aesEncrypt(element, password)
 
     let messageJson = JSON.stringify({
+      game_id: game.id,
       move: message
     })
 
@@ -363,7 +364,7 @@ const Board = ({
         stage === stages.FINISHED &&
         <div className='finalBoard'>
           <h2>GAME FINISHED</h2>
-          <h2>{ (game.winner === 0) ? 'IT IS A DRAW!' : (game.winner === player) ? 'YOU WON THE GAME!' : 'YOU LOSE THE GAME!' }</h2>
+          <h2>{ (game.winner === 3) ? 'IT IS A DRAW!' : (game.winner === player) ? 'YOU WON THE GAME!' : 'YOU LOSE THE GAME!' }</h2>
         </div>
       }
       { (stage === stages.STARTED || stage === stages.FINISHED) && // Once game started

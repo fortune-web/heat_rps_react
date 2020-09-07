@@ -163,9 +163,9 @@ const Payment = ({
   <h2 className="gameAdvice">Game is waiting for funds. Make your bet to start the game</h2>
 }
 {
-  (game.status === 'FUNDED' || game.status === 'CREATED') &&
+  (game.status === 'CREATED' || (game.status === 'FUNDED' && !account.id)) &&
   <div>
-      <h2>To make your bet, send {game.amount} HEAT to the account:</h2>
+      <h2>To make your bet, send {game.amount / 100000000} HEAT to the account:</h2>
       <div className="mainAccount">{mainAccount}</div>
       <h2>With the message:</h2>
       <div className="mainAccount">{game.id}</div>
@@ -175,7 +175,7 @@ const Payment = ({
 }
       <h2 className="loginAdvice">If you already have a password, login:</h2>
       <input placeholder="Password" id="password" type="text" className="inpPassword" onChange={()=>updatePassword()} value={account.password} /> 
-      <button onClick={(e)=>enterGame(game.id)}>ENTER</button>
+      <button onClick={(e)=>enterGame(game)}>ENTER</button>
       {
         stage === stages.FINISHED &&
         <div className='finalBoard'>

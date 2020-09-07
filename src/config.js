@@ -25,8 +25,8 @@ export const stages = {
 	  LOGIN: 0,
 	  LOBBY: 1,
 	  CREATED: 2,
-	  STARTED: 3,
-	  FUNDED: 4,
+	  FUNDED: 3,
+	  STARTED: 4,
 	  RESULTS: 5,
 	  FINISHED: 6
 	}
