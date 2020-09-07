@@ -14,6 +14,7 @@ import httpClient from '../../helpers/axios';
 // Components
 import Element from '../Element/Element';
 import Encrypter from '../Encrypter/Encrypter';
+import GameInfo from '../GameInfo/GameInfo';
 
 import './Board.css';
 import { stages, API_URL } from '../../config.js';
@@ -65,7 +66,7 @@ const Board = ({
       const vars = {
         card: message,
         account: account,
-        opponent: game.opponent,
+        opponent: game.opponent_id,
       }
       console.log("VARS:", vars)
 
@@ -172,7 +173,8 @@ const Board = ({
     if ( data.status === 'STARTED' ) {
       setGame(prevGame => ({
         ...prevGame,
-        opponent: data.opponent,
+        opponent_id: data.opponent_id,
+        opponent_name: data.opponent_name,
         status: 'STARTED',
         current_round: 1
       }))
@@ -296,7 +298,7 @@ const Board = ({
       ((round < opponentMoves.length && round < moves.length) || game.status === 'STARTED'); 
       round++) {
       
-      console.log("Gstatus:", game.status)
+      // console.log("Gstatus:", game.status)
 
         resp.push (
           <div className="roundsInfo" key={round}>
@@ -328,7 +330,7 @@ const Board = ({
   useEffect(() => {
     const setOpName = async() => {
       if ( player === 1 ) {
-        setOpponentName(await getName(game.opponent) || 'WAITING')
+        setOpponentName(await getName(game.opponent_name) || 'WAITING')
       } else {
         setOpponentName(await getName(game.account_id))
       }
@@ -373,24 +375,7 @@ const Board = ({
   return (
     <div className="Board">
 
-      <div className="gameInfo">
-        <div className="listItem">
-          <span className="listName">Game Id</span>
-          <span className="listData">{game.id}</span>
-        </div>
-        <div className="listItem">
-          <span className="listName">Opponent</span>
-          <span className="listData">{opponentName}</span>
-        </div>
-        <div className="listItem">
-          <span className="listName">Bet amount</span>
-          <span className="listData">{game.amount} HST</span>
-        </div>
-        <div className="listItem">
-          <span className="listName">Number of rounds</span>
-          <span className="listData">{game.rounds}</span>
-        </div>
-      </div>
+      <GameInfo game={game}/>
 
       <Encrypter />
       

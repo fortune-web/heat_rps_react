@@ -26,29 +26,6 @@
 	transform:scale(1.2);
 }
 
-.listItem {
-	padding: 2px 12px;
-    line-height: 20pt;
-    display:inline-block;
-}
-
-.listItem:not(:last-child) {
-	border-right: 1px solid rgb(255, 255, 255, 0.1);
-}
-
-.listName {
-	font-weight: bold;
-	margin-right: 12px;
-	display: block;
-	position: relative;
-	width:180px;
-	z-index:10;
-}
-
-.listData {
-	line-height:18pt;
-}
-
 .roundItem {
 	padding: 2px 12px;
     line-height: 20pt;

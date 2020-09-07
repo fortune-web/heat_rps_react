@@ -14,6 +14,7 @@ import httpClient from '../../helpers/axios';
 // Components
 import Element from '../Element/Element';
 import Encrypter from '../Encrypter/Encrypter';
+import GameInfo from '../GameInfo/GameInfo';
 
 import './Payment.css';
 import { stages, API_URL, mainAccount } from '../../config.js';
@@ -70,9 +71,8 @@ const Payment = ({
     if ( data.status === "OK") {
       setGame(prevGame=>({
         ...prevGame,
-        game_pin: data.pin,
+        pin: data.pin,
         player: data.player,
-        account_id: data.account_id,
         opponent_id: data.opponent_id,
         opponent_name: data.opponent_name,
         status: data.player === 1 ? 'FUNDED' : 'STARTED'
@@ -118,8 +118,8 @@ const Payment = ({
     if (data.status === 'STARTED') {
       setGame(prevGame=>({
         ...prevGame,
-        opponent_id: data.account_id2,
-        opponent_name: data.account_name2,
+        // opponent_id: data.account_id2,
+        // opponent_name: data.account_name2,
         status: 'STARTED'
       }))
       setStage(stages.STARTED)
@@ -145,32 +145,15 @@ const Payment = ({
         ...account,
         password: document.getElementById('password').value,
       }))
-  }
-    console.log("game:", game)
+    console.log("updatepass:", game)
   // console.log("MOVES:", moves)
+}
 
   return (
     <div className="Payment">
 
-      <div className="gameInfo">
-        <div className="listItem">
-          <span className="listName">Game Id</span>
-          <span className="listData">{game.id}</span>
-          <span className="listDataPin">{game.pin}</span>
-        </div>
-        <div className="listItem">
-          <span className="listName">Opponent</span>
-          <span className="listData">{opponentName}</span>
-        </div>
-        <div className="listItem">
-          <span className="listName">Bet amount</span>
-          <span className="listData">{game.amount} HST</span>
-        </div>
-        <div className="listItem">
-          <span className="listName">Number of rounds</span>
-          <span className="listData">{game.rounds}</span>
-        </div>
-      </div>
+    <GameInfo game={game}/>
+
 {
   game.status === 'FUNDED' &&
   <h2 className="gameAdvice">Game is funded. Waiting for an opponent to bet</h2>
@@ -192,7 +175,7 @@ const Payment = ({
 }
       <h2 className="loginAdvice">If you already have a password, login:</h2>
       <input placeholder="Password" id="password" type="text" className="inpPassword" onChange={()=>updatePassword()} value={account.password} /> 
-      <button onClick={(e)=>enterGame(game)}>ENTER</button>
+      <button onClick={(e)=>enterGame(game.id)}>ENTER</button>
       {
         stage === stages.FINISHED &&
         <div className='finalBoard'>

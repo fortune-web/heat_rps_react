@@ -93,7 +93,7 @@ const createGame = async () => {
           pin: data.game_pin,
           rounds: params.rounds,
           amount: params.amount,
-          status: 'FUNDED',
+          status: 'CREATED',
           current_round: 1
       })
       // loadGame(bet)

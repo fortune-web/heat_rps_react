@@ -51,11 +51,11 @@ const App = () => {
     }
   }
 
-  const enterGame = async (data) => {
+  const enterGame = async (id) => {
 
     if (!account.password) {
       setGame({
-        id: data.id,
+        id: id,
         status: 'CREATED'
       })
       setStage(stages.CREATED)
@@ -63,7 +63,7 @@ const App = () => {
     }
 
       const params = {
-        game_id: data.id,
+        game_id: id,
         password: account.password,
       }
 
@@ -78,19 +78,34 @@ const App = () => {
         }
       })
 
-      console.log("STARTED:", resp)
+      const data = await resp.json()
 
-    setPlayer(2)
+      console.log("STARTED:", data)
+
+    setPlayer(data.player)
+
     setGame({
       id: data.id,
+      pin: data.pin,
       account_id: data.account_id,
-      opponent: account.id,
+      account_name: data.account_name,
+      opponent_id: data.opponent_id,
+      opponent_name: data.opponent_name,
       rounds: data.rounds,
       amount: data.amount,
       status: data.status,
       current_round: 1
     })
-    setStage((data.status === 'CREATED') ? stages.CREATED : (data.status === 'FINISHED') ? stages.FINISHED : stages.STARTED)
+    setAccount(oldAccount=>({
+      ...oldAccount,
+      id: data.account_id,
+      name: data.account_name,
+    }))
+    setStage(
+      (data.status === 'CREATED') ? stages.CREATED : 
+      (data.status === 'FINISHED') ? stages.FINISHED : 
+      (data.status === 'STARTED') ? stages.STARTED : 
+      stages.STARTED)
     
   }
 
@@ -115,6 +130,9 @@ const App = () => {
       if (resp.ok) {
         setGame({
           id: bet.id,
+          pin: data.game_pin,
+          amount: data.amount,
+          rounds: data.rounds,
           status: 'LOGIN'
         })
         setStage(stages.LOGIN) 

@@ -12,7 +12,7 @@ import { config } from '../../config.js';
 const Bet = ({ account, bet, enterGame, loadGame }) => {
 
   const startGame = (bet) => {
-    enterGame(bet)
+    enterGame(bet.id)
   }
 
   // if ( !bet.account_id ) return null

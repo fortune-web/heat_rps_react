@@ -16,7 +16,8 @@ export const config = {
 	},
 }
 
-export const mainAccount = '6768971178720561498';
+export const mainAccount = '13731872534881421597'; // rpsgame@heatwallet.com
+
 
 export const API_URL = 'http://localhost:3010/'; // 'http://rps.ethernity.live:3010/''
 
