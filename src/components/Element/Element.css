@@ -5,6 +5,7 @@
   transform:scale(0.8);
   transition:.25s;
   font-size: 9pt;
+  mix-blend-mode: lighten;
 }
 
 .activeCard {

@@ -192,14 +192,42 @@ const Board = ({
 }
 
   const showWinner = (playerCard, opponentCard) => {
-    if (!opponentCard) return
-    if (playerCard === opponentCard) return 'DRAW'
-    if (playerCard === 'rock' && opponentCard === 'scissor') return 'YOU WIN'
-    if (playerCard === 'rock' && opponentCard === 'paper') return 'YOU LOSE'
-    if (playerCard === 'paper' && opponentCard === 'rock') return 'YOU WIN'
-    if (playerCard === 'paper' && opponentCard === 'scissor') return 'YOU LOSE'
-    if (playerCard === 'scissor' && opponentCard === 'paper') return 'YOU WIN'
-    if (playerCard === 'scissor' && opponentCard === 'rock') return 'YOU LOSE'
+    if (!opponentCard) return {
+      text: null,
+      letter: ''
+    }
+    if (playerCard === opponentCard) return {
+      text: 'DRAW',
+      letter: 'D',
+    }
+    if (playerCard === 'rock' && opponentCard === 'scissor') return {
+      text: 'YOU WIN',
+      letter: 'W',
+    }
+    if (playerCard === 'rock' && opponentCard === 'paper') return {
+      text: 'YOU LOSE',
+      letter: 'L',
+    }
+    if (playerCard === 'paper' && opponentCard === 'rock') return {
+      text: 'YOU WIN',
+      letter: 'W',
+    }
+    if (playerCard === 'paper' && opponentCard === 'scissor') return {
+      text: 'YOU LOSE',
+      letter: 'L',
+    }
+    if (playerCard === 'scissor' && opponentCard === 'paper') return {
+      text: 'YOU WIN',
+      letter: 'W',
+    }
+    if (playerCard === 'scissor' && opponentCard === 'rock') return {
+      text: 'YOU LOSE',
+      letter: 'L',
+    }
+    return {
+      text: null,
+      letter: ''
+    }
   }
 
 
@@ -277,11 +305,14 @@ const Board = ({
       round++) {
       
       // console.log("Gstatus:", game.status)
-
+        let winner = showWinner(moves[round]?.card, opponentMoves[round]?.card)
         resp.push (
-          <div className="roundsInfo" key={round}>
+          <div className={"roundsInfo" + winner.letter} key={round}>
             <div className="roundRound">
               <p>Round {round + 1}</p>
+            </div>
+            <div className="roundWinner">
+              <p>{winner.text}</p>
             </div>
             <div className="roundItem">
               <span className="roundName">YOU</span>
@@ -295,9 +326,6 @@ const Board = ({
               move={opponentMoves[round] ? opponentMoves[round].move : null}
               password={opponentMoves[round] ? opponentMoves[round].password : null}
               active={false} />
-            </div>
-            <div className="roundWinner">
-              <p>{showWinner(moves[round]?.card, opponentMoves[round]?.card)}</p>
             </div>
           </div>   
         )
@@ -350,6 +378,9 @@ const Board = ({
 
   // console.log("MOVES:", moves)
 
+  let winner = 'L'
+  if (game.winner === player) winner = 'W'
+  if (game.winner === 3) winner = 'D'
   return (
     <div className="Board">
 
@@ -362,7 +393,7 @@ const Board = ({
       <button onClick={()=>resetGame()}>BACK TO LOBBY</button> 
       {
         stage === stages.FINISHED &&
-        <div className='finalBoard'>
+        <div className={'finalBoard' + winner}>
           <h2>GAME FINISHED</h2>
           <h2>{ (game.winner === 3) ? 'IT IS A DRAW!' : (game.winner === player) ? 'YOU WON THE GAME!' : 'YOU LOSE THE GAME!' }</h2>
         </div>
