@@ -55,7 +55,7 @@ const Lobby = ({ enterGame, loadGame, account, bets, stage, setStage, setBets, g
 const createGame = async () => {
 
     const params = {
-      amount: document.getElementById('amount').value,
+      amount: document.getElementById('amount').value * 100000000,
       rounds: document.getElementById('rounds').value,
       private: document.getElementById('private').value,
     }
@@ -127,8 +127,8 @@ const createGame = async () => {
       </select> 
       <div>
         <select id="private" type="text" className="inpRounds" >
-          <option value="private">Private</option>
-          <option value="public" selected>Public</option>
+          <option value="1">Private</option>
+          <option value="0" selected>Public</option>
         </select> 
       </div>
       </p>

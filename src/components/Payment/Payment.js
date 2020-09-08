@@ -35,6 +35,7 @@ const Payment = ({
   const [ waiting, setWaiting ] = useState(false) // To wait for the own move to be sent
   const [ password, setPassword ] = useState('')
   const [ opponentName, setOpponentName ] = useState('WAITING')
+  const [ isPaying, setPaying ] = useState(false)
 
   var opponentTimeout
 
@@ -43,6 +44,8 @@ const Payment = ({
     const params = {
         game_id: game.id,
     }
+
+    setPaying(true)
 
     const resp = await fetch(API_URL + 'paid', {
       method: 'POST',
@@ -53,6 +56,8 @@ const Payment = ({
       }
     })
 
+    setPaying(false)
+    
     const data = await resp.json()
 
     console.log("PAID:", data)
@@ -181,7 +186,14 @@ const Payment = ({
       <h2>With the message:</h2>
       <div className="mainAccount">{game.id}</div>
       <h2>After that, press the button:</h2>
+      {
+      !isPaying &&
       <button onClick={()=>paid()}>PAYMENT MADE</button> 
+      }
+      {
+      isPaying &&
+      <p>CHECKING PAYMENT</p> 
+      }
   </div>
 }
 {

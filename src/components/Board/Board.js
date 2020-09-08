@@ -354,10 +354,10 @@ const Board = ({
     <div className="Board">
 
       <GameInfo game={game}/>
-
-      <Encrypter />
       
       <h2>Welcome <span className='name'>{account.name}</span></h2>
+      <p>Password to reenter</p>
+      <p>{account.password}</p>
 
       <button onClick={()=>resetGame()}>BACK TO LOBBY</button> 
       {
@@ -404,6 +404,7 @@ const Board = ({
           <h2>Waiting for an opponent to join</h2>
         </div>
       }
+      <Encrypter />
     </div>
   );
 }

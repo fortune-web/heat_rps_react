@@ -39,6 +39,7 @@ const Encrypter = () => {
 
   return (
     <div>
+    <p>Here you can verify that your opponent moves are correctly decrypted when the password is revealed</p>
       <span className='section'>
           <input className='encInput' type='text' placeholder='Encrpyted text' id='encmessage' />
           <input className='encPassword' type='text' placeholder='Password' id='decpassword' />
