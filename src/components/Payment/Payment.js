@@ -84,7 +84,7 @@ const Payment = ({
       })
 
       setPlayer(data.player)
-      setStage(stages.FUNDED)
+      setStage(data.player === 1 ? stages.FUNDED : stages.STARTED)
     }
 
   }
@@ -118,8 +118,8 @@ const Payment = ({
     if (data.status === 'STARTED') {
       setGame(prevGame=>({
         ...prevGame,
-        // opponent_id: data.account_id2,
-        // opponent_name: data.account_name2,
+        opponent_id: data.account_id2,
+        opponent_name: data.account_name2,
         status: 'STARTED'
       }))
       setStage(stages.STARTED)
@@ -137,6 +137,10 @@ const Payment = ({
   }, [game.status])
 
 
+  const resetGame = () => {
+    setGame(null)
+    setStage(stages.LOBBY)
+  }
 
 
   const updatePassword = () => {
@@ -153,13 +157,20 @@ const Payment = ({
     <div className="Payment">
 
     <GameInfo game={game}/>
+    <button onClick={()=>resetGame()}>BACK TO LOBBY</button> 
 
 {
-  game.status === 'FUNDED' &&
-  <h2 className="gameAdvice">Game is funded. Waiting for an opponent to bet</h2>
+  game.status === 'FUNDED' && // After the payment is made
+  <div>
+    <h2 className="gameAdvice">Game is funded. Waiting for an opponent to bet.</h2>
+    <h2 className="gameAdvice">Game will begin when an opponent joins</h2>
+    <h2>Save your password to reenter the game anytime:</h2>
+    <h3>{account.password}</h3>
+
+  </div>
 }
 {
-  game.status === 'CREATED' && 
+  game.status === 'CREATED' && // When entering a FUNDED game for first time
   <h2 className="gameAdvice">Game is waiting for funds. Make your bet to start the game</h2>
 }
 {
@@ -173,9 +184,14 @@ const Payment = ({
       <button onClick={()=>paid()}>PAYMENT MADE</button> 
   </div>
 }
+{
+  (game.status !== 'FUNDED') && 
+  <div>
       <h2 className="loginAdvice">If you already have a password, login:</h2>
       <input placeholder="Password" id="password" type="text" className="inpPassword" onChange={()=>updatePassword()} value={account.password} /> 
       <button onClick={(e)=>enterGame(game)}>ENTER</button>
+  </div>
+}
       {
         stage === stages.FINISHED &&
         <div className='finalBoard'>

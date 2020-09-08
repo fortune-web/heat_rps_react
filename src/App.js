@@ -57,8 +57,8 @@ const App = () => {
       setGame({
         id: game.id,
         amount: game.amount,
-        opponent_name: 'WAITING',
-        opponent_id: '-',
+        opponent_name: game.status === 'CREATED' ? 'WAITING' : game.account_name1 || game.account_id1,
+        opponent_id: game.status === 'CREATED' ? '-' : game.account_id1,
         rounds: game.rounds,
         status: 'CREATED'
       })
@@ -86,6 +86,12 @@ const App = () => {
 
       console.log("STARTED:", data)
 
+      if (data.error) {
+        alert(data.error)
+        return
+      }
+
+
     setPlayer(data.player)
 
     setGame({
@@ -108,7 +114,8 @@ const App = () => {
     setStage(
       (data.status === 'CREATED') ? stages.CREATED : 
       (data.status === 'FINISHED') ? stages.FINISHED : 
-      (data.status === 'STARTED') ? stages.STARTED : 
+      (data.status === 'STARTED') ? stages.STARTED :
+      (data.status === 'FUNDED') ? stages.FUNDED : 
       stages.STARTED)
     
   }
