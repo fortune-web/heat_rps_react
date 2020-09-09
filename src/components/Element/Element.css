@@ -3,7 +3,7 @@
   display: inline-block;
   margin: 8px;
   transform:scale(0.8);
-  transition:.25s;
+  transition:1s;
   font-size: 9pt;
   mix-blend-mode: lighten;
 }
@@ -15,7 +15,7 @@
   cursor: pointer;
   transform:scale(1.25);
   mix-blend-mode: multiply;
-  transition:.25s;
+  transition:1s;
 }
 
 .activeCard:hover {

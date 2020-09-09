@@ -85,37 +85,45 @@ const Board = ({
         }
 
         console.log("MOVEPOST:", params)
-        const resp = await fetch(API_URL + 'move', {
-          method: 'POST',
-          body: JSON.stringify(params), 
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json'
+
+        try {
+          const resp = await fetch(API_URL + 'move', {
+            method: 'POST',
+            body: JSON.stringify(params), 
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+
+          console.log("MOVED:", resp)
+          if(resp && resp.ok) {
+
+            setPassword(generatePassword(14))
+
+            const data = await resp.json()
+
+            console.log("MOVERESULT:", data)
+
+            if ( data.finished ) {
+              // Game ended
+              setStage(stages.FINISHED)
+              setGame(prevGame => ({
+                ...prevGame,
+                status: 'FINISHED',
+                winner: data.winner
+              }))
+            }
+
+          } else {
+            alert("Move data error")
           }
-        })
-
-        console.log("MOVED:", resp)
-        if(resp && resp.ok) {
-
-          const data = await resp.json()
-
-          console.log("MOVERESULT:", data)
-
-          if ( data.finished ) {
-            // Game ended
-            setStage(stages.FINISHED)
-            setGame(prevGame => ({
-              ...prevGame,
-              status: 'FINISHED',
-              winner: data.winner
-            }))
-          }
-
-
-        } else {
-          alert("MOVE CONNECTION ERROR")
+          setWaiting(false)
+        } catch(e) {
+          alert("Error sending the move:", e)
+          setWaiting(false)
+          return
         }
-        setWaiting(false)
 
   }
 
@@ -161,7 +169,7 @@ const Board = ({
 
   }
 
-  const waitForPlayer1 = async (m) => {
+/*  const waitForPlayer1 = async (m) => {
 
     console.log("PLAYER1............................", m)
 
@@ -180,7 +188,7 @@ const Board = ({
         refSubscriber = null
       }
     }
-  }
+  }*/
 
 
   const updatePassword = (e) => {
@@ -188,7 +196,8 @@ const Board = ({
   }
 
   const generatePassword = (length) => {
-    return crypto.randomBytes(length).toString('base64').slice(0,-1)
+    return crypto.randomBytes(length).toString('hex').slice(0,-1)
+    // return HGame.randomBytes()
 }
 
   const showWinner = (playerCard, opponentCard) => {
@@ -334,6 +343,15 @@ const Board = ({
   }
 
   useEffect(() => {
+    setPassword(generatePassword(14))
+    return () => {
+      clearTimeout(listenTimeout)
+      clearTimeout(waitTimeout)
+    }
+  }, [])
+
+
+  useEffect(() => {
     const setOpName = async() => {
       if ( player === 1 ) {
         setOpponentName(await getName(game.opponent_name) || 'WAITING')
@@ -345,18 +363,6 @@ const Board = ({
     listenMoves()
   }, [game.opponent])
 
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(listenTimeout)
-      clearTimeout(waitTimeout)
-    }
-  }, [])
-
-  useEffect(() => {
-    setPassword(generatePassword(14))
-    // refSubscriber = HGame.subscribe('messages', waitForPlayer1)
-  }, [ game.current_round ])
 
   useEffect(() => {
     // refSubscriber = HGame.subscribe('messages', waitForPlayer1)
