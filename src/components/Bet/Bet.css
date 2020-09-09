@@ -5,3 +5,13 @@
 }
 
 
+.category {
+	font-weight: bold;
+	margin-top: 8px;
+}
+
+.category span {
+	display:block;
+	font-weight: normal;
+	line-height: 9pt;
+}

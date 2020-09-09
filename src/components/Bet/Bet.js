@@ -20,9 +20,9 @@ const Bet = ({ account, bet, enterGame, loadGame }) => {
   return (
     <div className="Bet">
       <div className="rounds"># {bet.id}</div>
-      <div className="account">ACCOUNT: {bet.account_name1 || bet.account_id1 || '-'}</div>
-      <div className="amount">AMOUNT: {bet.amount / 100000000}</div>
-      <div className="rounds">ROUNDS: {bet.rounds}</div>
+      <div className="category">ACCOUNT<span>{bet.account_name1 || bet.account_id1 || '-'}</span></div>
+      <div className="category">AMOUNT<span>{bet.amount / 100000000} HST</span></div>
+      <div className="category">ROUNDS<span>{bet.rounds}</span></div>
       <div>
       {
         (bet.status === 'FINISHED') &&
