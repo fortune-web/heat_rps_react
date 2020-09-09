@@ -296,7 +296,7 @@ const Board = ({
 
   const resetGame = () => {
     setGame(null)
-    setAccount(null)
+    setAccount({})
     setStage(stages.LOBBY)
   }
 

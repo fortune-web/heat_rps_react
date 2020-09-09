@@ -144,7 +144,7 @@ const Payment = ({
 
   const resetGame = () => {
     setGame(null)
-    setAccount(null)
+    setAccount({})
     setStage(stages.LOBBY)
   }
 
