@@ -60,6 +60,11 @@ const createGame = async () => {
       private: document.getElementById('private').value,
     }
     
+    if (params.amount === 0) {
+      alert("Please fill an amount to bet")
+      return
+    }
+
     const formData = new FormData()
     formData.append('amount', params.amount)
     formData.append('rounds', params.rounds)
