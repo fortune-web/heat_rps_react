@@ -54,15 +54,14 @@ const Lobby = ({ enterGame, loadGame, account, bets, stage, setStage, setBets, g
 
 const createGame = async () => {
 
+    if (document.getElementById('amount').value === "" || document.getElementById('amount').value === "0") {
+      alert("Please fill an amount to bet")
+      return
+    }
     const params = {
       amount: document.getElementById('amount').value * 100000000,
       rounds: document.getElementById('rounds').value,
       private: document.getElementById('private').value,
-    }
-    
-    if (params.amount === 0) {
-      alert("Please fill an amount to bet")
-      return
     }
 
     const formData = new FormData()
