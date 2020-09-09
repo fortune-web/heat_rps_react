@@ -28,7 +28,7 @@ const Board = ({
   moves, setMoves,
   round, setRound,
   opponentMoves, setOpponentMoves, 
-  account, 
+  account, setAccount,
   player
 }) => {
 
@@ -296,6 +296,7 @@ const Board = ({
 
   const resetGame = () => {
     setGame(null)
+    setAccount(null)
     setStage(stages.LOBBY)
   }
 

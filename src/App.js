@@ -242,6 +242,7 @@ const App = () => {
           opponentMoves={opponentMoves} 
           setOpponentMoves={setOpponentMoves}
           account={account}  
+          setAccount={setAccount}
           player={player}
         />
       }
