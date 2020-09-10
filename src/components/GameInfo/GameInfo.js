@@ -25,7 +25,7 @@ const GameInfo = ({game}) => {
 	    </div>
 	    <div className="listItem">
 	      <span className="listName">Bet amount</span>
-	      <span className="listData">{game.amount / 100000000} HST</span>
+	      <span className="listData">{game.amount / 100000000} HEAT</span>
 	    </div>
 	    <div className="listItem">
 	      <span className="listName">Number of rounds</span>

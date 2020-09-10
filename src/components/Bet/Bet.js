@@ -21,7 +21,7 @@ const Bet = ({ account, bet, enterGame, loadGame }) => {
     <div className="Bet">
       <div className="rounds"># {bet.id}</div>
       <div className="category">ACCOUNT<span>{bet.account_name1 || bet.account_id1 || '-'}</span></div>
-      <div className="category">AMOUNT<span>{bet.amount / 100000000} HST</span></div>
+      <div className="category">AMOUNT<span>{bet.amount / 100000000} HEAT</span></div>
       <div className="category">ROUNDS<span>{bet.rounds}</span></div>
       <div>
       {
