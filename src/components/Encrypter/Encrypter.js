@@ -1,10 +1,4 @@
-import React, { 
-  lazy,
-  useRef,
-  useState, 
-  useEffect,
-  useLayoutEffect,
-} from 'react';
+import React from 'react';
 
 // heat Game Library
 import HGame from '@ethernity/heat-games';

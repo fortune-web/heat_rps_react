@@ -1,19 +1,14 @@
 import React, { 
-  lazy,
-  useRef,
-  useState, 
   useEffect,
-  useLayoutEffect,
 } from 'react';
-
-import httpClient from '../../helpers/axios';
+import PropTypes from 'prop-types';
 
 import Bet from '../Bet/Bet';
 
 import './Lobby.css';
-import { config, stages, API_URL } from '../../config.js';
+import { stages, API_URL } from '../../config.js';
 
-const Lobby = ({ enterGame, loadGame, account, bets, stage, setStage, setBets, game, setGame }) => {
+const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
 
   var betsTimeout
   
@@ -113,11 +108,12 @@ const createGame = async () => {
     <div className="Lobby">
     { 
     bets && bets.length > 0 && 
-      bets.map((bet) => {
+      bets.map((bet, index) => {
         return <Bet 
           bet={bet}
           enterGame={enterGame}
           loadGame={loadGame}
+          key={index}
           />
       })
     }
@@ -140,5 +136,14 @@ const createGame = async () => {
     </div>
   );
 }
+
+Lobby.propTypes = {
+  enterGame: PropTypes.func,
+  loadGame: PropTypes.func,
+  bets: PropTypes.object,
+  setStage: PropTypes.func,
+  setBets: PropTypes.func,
+  setGame: PropTypes.func,
+};
 
 export default Lobby;

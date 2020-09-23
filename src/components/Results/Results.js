@@ -1,10 +1,5 @@
-import React, { 
-  lazy,
-  useRef,
-  useState, 
-  useEffect,
-  useLayoutEffect,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 // Components
 import Element from '../Element/Element';
@@ -23,5 +18,10 @@ const Results = ({ move, restartGame }) => {
     </div>
   );
 }
+
+Results.propTypes = {
+  move: PropTypes.object.isRequired,
+  restartGame: PropTypes.func.isRequired,
+};
 
 export default Results;

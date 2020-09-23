@@ -1,9 +1,6 @@
 import React, { 
-  lazy,
-  useRef,
   useState, 
   useEffect,
-  useLayoutEffect,
 } from 'react';
 
 // heat Game Library
@@ -12,11 +9,8 @@ import HGame from '@ethernity/heat-games';
 import { config, stages, API_URL } from './config.js';
 
 import './App.css';
-import Login from './components/Login/Login';
 import Lobby from './components/Lobby/Lobby';
 import Board from './components/Board/Board';
-import Waiting from './components/Waiting/Waiting';
-import Results from './components/Results/Results';
 import Payment from './components/Payment/Payment';
 
 
@@ -27,29 +21,12 @@ const App = () => {
   const [ opponentMoves, setOpponentMoves ] = useState([]);
   const [ player, setPlayer ] = useState(null);
   const [ game, setGame ] = useState({});
-  const [ response, setResponse ] = useState(null);
   const [ account, setAccount ] = useState({
     name: config.ACCOUNT.NAME,
     secret: config.ACCOUNT.SECRET,
     id: config.ACCOUNT.ID,
   })
   const [ bets, setBets ] = useState({});
-
-  // console.log("CONFIG:", process.env)
-
-
-  const changeAccount = (acc) => {
-
-    if ( acc === 1 ) {
-      setAccount({
-        secret: config.ACCOUNT.SECRET,
-      })
-    } else {
-      setAccount({
-        secret: config.ACCOUNT2.SECRET,
-      }) 
-    }
-  }
 
   const enterGame = async (game) => {
 
@@ -151,13 +128,6 @@ const App = () => {
 
   }
 
-
-  const restartGame = () => {
-    setResponse(null)
-    setMoves([])
-    setStage(stages.LOBBY) // 1
-  }
-
   useEffect(() => { async function getAccount() {
       if (account.secret) {
         const gameData = await HGame.getAccountBySecret(account.secret)
@@ -173,19 +143,10 @@ const App = () => {
   }, [account.secret])
 
 
-  // console.log("GAME:", game)
   return (
     <div className="App">
       <div className="container">
-      {
-/*        stage === stages.LOGIN && // 0
-        <Login
-          account={account}
-          setAccount={setAccount}
-          setStage={setStage}
-          changeAccount={changeAccount}
-        />
-*/      }
+
       {
         stage === stages.LOBBY && // 1
         <Lobby 
@@ -200,7 +161,7 @@ const App = () => {
         />
       }
       {
-        (stage === stages.CREATED || stage == stages.FUNDED || stage === stages.LOGIN ) && // 1
+        (stage === stages.CREATED || stage === stages.FUNDED || stage === stages.LOGIN ) && // 1
         <Payment 
           enterGame={enterGame}
           account={account}
@@ -211,25 +172,9 @@ const App = () => {
           stage={stage}
           setGame={setGame}
           game={game}
-          enterGame={enterGame}
           setPlayer={setPlayer}
         />
-      }  
-      {
-        stage === stages.NOTHING && // 1
-        <Waiting 
-          enterGame={enterGame}
-          account={account}
-          setAccount={setAccount}
-          setStage={setStage}
-          bets={bets}
-          setBets={setBets}
-          stage={stage}
-          setGame={setGame}
-          game={game}
-          enterGame={enterGame}
-        />
-      }     
+      }       
       {
         (stage === stages.STARTED || stage === stages.FINISHED) && // 2
         <Board 

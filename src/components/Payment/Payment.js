@@ -1,40 +1,24 @@
-import React, { 
-  lazy,
-  useRef,
+import React, {
   useState, 
   useEffect,
-  useLayoutEffect,
 } from 'react';
-
-// heat Game Library
-import HGame from '@ethernity/heat-games';
-
-import httpClient from '../../helpers/axios';
+import PropTypes from 'prop-types';
 
 // Components
-import Element from '../Element/Element';
-import Encrypter from '../Encrypter/Encrypter';
 import GameInfo from '../GameInfo/GameInfo';
 
 import './Payment.css';
 import { stages, API_URL, mainAccount } from '../../config.js';
 
-import crypto from 'crypto';
-
 
 const Payment = ({ 
   stage, setStage, 
   game, setGame, 
-  account, setAccount,
-  round, setRound,
-  opponentMoves, setOpponentMoves,  
+  account, setAccount,  
   player, setPlayer,
   enterGame
 }) => {
 
-  const [ waiting, setWaiting ] = useState(false) // To wait for the own move to be sent
-  const [ password, setPassword ] = useState('')
-  const [ opponentName, setOpponentName ] = useState('WAITING')
   const [ isPaying, setPaying ] = useState(false)
 
   var opponentTimeout
@@ -202,7 +186,7 @@ const Payment = ({
   <div>
       <h2 className="loginAdvice">If you already have a password, login:</h2>
       <input placeholder="Password" id="password" type="text" className="inpPassword" onChange={()=>updatePassword()} value={account.password} /> 
-      <button onClick={(e)=>enterGame(game)}>ENTER</button>
+      <button onClick={()=>enterGame(game)}>ENTER</button>
   </div>
 }
       {
@@ -216,5 +200,17 @@ const Payment = ({
     </div>
   );
 }
+
+Payment.propTypes = {
+  stage: PropTypes.object,
+  setStage: PropTypes.func,
+  game: PropTypes.object,
+  setGame: PropTypes.func,
+  account: PropTypes.object,
+  setAccount: PropTypes.func,
+  player: PropTypes.object,
+  setPlayer: PropTypes.func,
+  enterGame: PropTypes.func,
+};
 
 export default Payment;

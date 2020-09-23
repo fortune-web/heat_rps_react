@@ -1,10 +1,7 @@
-import React, { 
-  lazy,
-  useRef,
-  useState, 
-  useEffect,
-  useLayoutEffect,
-} from 'react';
+import React from 'react';
+
+import PropTypes from 'prop-types';
+
 import rock  from './images/set2/rock.png'
 import paper from './images/set2/paper.png'
 import scissor from './images/set2/scissor.png'
@@ -16,17 +13,15 @@ const Element = ({ element, move, password, play, active }) => {
 
 
   let image
-  let encrypted
 
   if (!element) return (
     <div className={'waiting'}>
     </div>
   )
-  if (element == 'rock') image = rock
-  if (element == 'paper') image = paper
-  if (element == 'scissor') image = scissor
-  if (element != 'rock' && element != 'paper' && element != 'scissor') {
-    encrypted = element
+  if (element === 'rock') image = rock
+  if (element === 'paper') image = paper
+  if (element === 'scissor') image = scissor
+  if (element !== 'rock' && element !== 'paper' && element !== 'scissor') {
     element = '?'
   }
   if (element === '?') image = question
@@ -45,5 +40,13 @@ const Element = ({ element, move, password, play, active }) => {
     </div>
   );
 }
+
+Element.propTypes = {
+  element: PropTypes.object,
+  move: PropTypes.object,
+  password: PropTypes.object,
+  play: PropTypes.object,
+  active: PropTypes.func.isRequired,
+};
 
 export default Element;

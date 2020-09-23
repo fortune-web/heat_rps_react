@@ -1,15 +1,12 @@
-import React, { 
-  lazy,
-  useRef,
+import React, {
   useState, 
-  useEffect,
-  useLayoutEffect,
+  useEffect
 } from 'react';
+
+import PropTypes from 'prop-types';
 
 // heat Game Library
 import HGame from '@ethernity/heat-games';
-
-import httpClient from '../../helpers/axios';
 
 // Components
 import Element from '../Element/Element';
@@ -26,7 +23,7 @@ const Board = ({
   stage, setStage, 
   game, setGame, 
   moves, setMoves,
-  round, setRound,
+  round,
   opponentMoves, setOpponentMoves, 
   account, setAccount,
   player
@@ -34,9 +31,6 @@ const Board = ({
 
   const [ waiting, setWaiting ] = useState(false) // To wait for the own move to be sent
   const [ password, setPassword ] = useState('')
-  const [ opponentName, setOpponentName ] = useState('WAITING')
-
-  var refSubscriber = useRef(null)
 
   var listenTimeout
   var waitTimeout
@@ -169,28 +163,6 @@ const Board = ({
 
   }
 
-/*  const waitForPlayer1 = async (m) => {
-
-    console.log("PLAYER1............................", m)
-
-    if (m && m.sender === account.opponent) {
-
-      let message = await HGame.readMessage(m, account.secret)
-      console.log("RECEIVED:", message)
-      message = JSON.parse(message)
-      if (!message.password) {
-        setOpponentMoves({
-          player1Move: message.move
-        })
-      }
-      if (refSubscriber) {
-        refSubscriber.close()
-        refSubscriber = null
-      }
-    }
-  }*/
-
-
   const updatePassword = (e) => {
     setPassword(e.target.value)
   }
@@ -300,11 +272,6 @@ const Board = ({
     setStage(stages.LOBBY)
   }
 
-  const getName = async (id) => {
-    const account = await HGame.getAccountById(id)
-    return account.publicName
-  }
-
   const showCards = () => {
     if (!moves || !opponentMoves) return
     let resp = []
@@ -353,21 +320,9 @@ const Board = ({
 
 
   useEffect(() => {
-    const setOpName = async() => {
-      if ( player === 1 ) {
-        setOpponentName(await getName(game.opponent_name) || 'WAITING')
-      } else {
-        setOpponentName(await getName(game.account_id))
-      }
-    }
-    setOpName()
     listenMoves()
   }, [game.opponent])
 
-
-  useEffect(() => {
-    // refSubscriber = HGame.subscribe('messages', waitForPlayer1)
-  }, [ game ])
 
   useEffect(() => {
     console.log("CHECKING status:", stage, stages.STARTED)
@@ -446,5 +401,21 @@ const Board = ({
     </div>
   );
 }
+
+
+Board.propTypes = {
+  stage: PropTypes.object.isRequired,
+  setStage: PropTypes.func.isRequired,
+  game: PropTypes.object,
+  setGame: PropTypes.object,
+  moves: PropTypes.object,
+  setMoves: PropTypes.object,
+  round: PropTypes.object,
+  opponentMoves: PropTypes.object,
+  setOpponentMoves: PropTypes.object,
+  account: PropTypes.object,
+  setAccount: PropTypes.object,
+  player: PropTypes.object,
+};
 
 export default Board;

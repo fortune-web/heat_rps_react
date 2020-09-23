@@ -1,17 +1,8 @@
-import React, { 
-  lazy,
-  useRef,
-  useState, 
-  useEffect,
-  useLayoutEffect,
-} from 'react';
-
-import httpClient from '../../helpers/axios';
-
-import Bet from '../Bet/Bet';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import './Login.css';
-import { config, stages } from '../../config.js';
+import { stages } from '../../config.js';
 
 const Login = ({ account, setAccount, setStage, changeAccount }) => {
 
@@ -36,5 +27,13 @@ const Login = ({ account, setAccount, setStage, changeAccount }) => {
     </div>
   );
 }
+
+
+Login.propTypes = {
+  account: PropTypes.object,
+  setAccount: PropTypes.object,
+  setStage: PropTypes.object,
+  changeAccount: PropTypes.func,
+};
 
 export default Login;

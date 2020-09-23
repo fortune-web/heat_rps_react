@@ -1,17 +1,11 @@
-import React, { 
-  lazy,
-  useRef,
-  useState, 
-  useEffect,
-  useLayoutEffect,
-} from 'react';
+import React, {}from 'react';
+import PropTypes from 'prop-types';
 
 import './Bet.css';
-import { config } from '../../config.js';
 
-const Bet = ({ account, bet, enterGame, loadGame }) => {
+const Bet = ({ bet, enterGame, loadGame }) => {
 
-  const startGame = (bet) => {
+  const startGame = () => {
     enterGame(bet)
   }
 
@@ -27,10 +21,12 @@ const Bet = ({ account, bet, enterGame, loadGame }) => {
       {
         (bet.status === 'FINISHED') &&
           <input className="inputButton" type="button" onClick={() => loadGame(bet)} value="FINISHED" />
-        ||
+      }
+      {
           (bet.status === 'FUNDED' || bet.status === 'CREATED') &&
-            <input className="inputButton" type="button" onClick={() => startGame(bet)} value="START GAME" />
-        ||
+            <input className="inputButton" type="button" onClick={() => startGame()} value="START GAME" />
+      }
+      {
           (bet.status === 'STARTED') &&
             <input className="inputButton" type="button" onClick={() => loadGame(bet)} value="CONTINUE GAME" />
         }
@@ -39,5 +35,11 @@ const Bet = ({ account, bet, enterGame, loadGame }) => {
     </div>
   );
 }
+
+Bet.propTypes = {
+  bet: PropTypes.object.isRequired,
+  enterGame: PropTypes.func.isRequired,
+  loadGame: PropTypes.func.isRequired,
+};
 
 export default Bet;
