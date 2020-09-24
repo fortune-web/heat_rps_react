@@ -1,4 +1,4 @@
-.card {
+.figure {
   text-align: center;
   display: inline-block;
   margin: 8px;
@@ -6,6 +6,7 @@
   transition:1s;
   font-size: 9pt;
   mix-blend-mode: lighten;
+  background-color: none;
 }
 
 .activeCard {

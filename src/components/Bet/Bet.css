@@ -2,16 +2,49 @@
   text-align: center;
   display: inline-block;
   margin: 8px;
+  margin-bottom: 18px;
+
+  border: 1px solid #666;
+    border-radius: 5px;
+    padding: 8px 12px;
+    margin: 0 20px;
+    width: 100%;
+
+    text-align: center;
+    font-size: 9pt;
+    background: #222;
 }
 
 
 .category {
 	font-weight: bold;
 	margin-top: 8px;
+	font-size: 11pt;
+}
+
+.category span {
+	color: #eee;
+}
+
+.account {
+	color: #edc041;
+}
+
+.amount {
+	color: #da5c11;
+}
+
+.rounds {
+	color:#628a2c;
+}
+
+.betid {
+	font-size: 19pt;
+	color:#eee;
+	line-height: 13pt;
 }
 
 .category span {
 	display:block;
 	font-weight: normal;
-	line-height: 9pt;
 }

@@ -27,7 +27,7 @@ const Element = ({ element, move, password, play, active }) => {
   if (element === '?') image = question
 
   return (
-    <div className={active ? 'activeCard' : 'card'}>
+    <div className={active ? 'activeCard' : 'figure'}>
       <img 
         src={image} 
         className={element==='?' ? 'gray' : element} 
