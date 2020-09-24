@@ -42,11 +42,11 @@ const Element = ({ element, move, password, play, active }) => {
 }
 
 Element.propTypes = {
-  element: PropTypes.object,
-  move: PropTypes.object,
-  password: PropTypes.object,
-  play: PropTypes.object,
-  active: PropTypes.func.isRequired,
+  element: PropTypes.string,
+  move: PropTypes.string,
+  password: PropTypes.string,
+  play: PropTypes.func,
+  active: PropTypes.bool,
 };
 
 export default Element;

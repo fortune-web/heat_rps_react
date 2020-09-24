@@ -129,12 +129,12 @@ const createGame = async () => {
         <option value="5">Short (5 rounds)</option>
         <option value="10">Long (10 rounds)</option>
       </select> 
-      <div>
-        <select id="private" type="text" className="inpRounds" >
+      </p>
+      <p>
+        <select defaultValue="0" id="private" type="text" className="inpRounds" >
           <option value="1">Private</option>
-          <option value="0" selected>Public</option>
+          <option value="0">Public</option>
         </select> 
-      </div>
       </p>
     <p><input className="inputButton" type="button" onClick={() => createGame()} value="MAKE BET" /></p>
     </div>
@@ -144,7 +144,7 @@ const createGame = async () => {
 Lobby.propTypes = {
   enterGame: PropTypes.func,
   loadGame: PropTypes.func,
-  bets: PropTypes.object,
+  bets: PropTypes.array,
   setStage: PropTypes.func,
   setBets: PropTypes.func,
   setGame: PropTypes.func,

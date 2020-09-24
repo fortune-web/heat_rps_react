@@ -1,6 +1,7 @@
 import React, {
   useState, 
-  useEffect
+  useEffect,
+  useRef,
 } from 'react';
 
 import PropTypes from 'prop-types';
@@ -32,8 +33,7 @@ const Board = ({
   const [ waiting, setWaiting ] = useState(false) // To wait for the own move to be sent
   const [ password, setPassword ] = useState('')
 
-  var listenTimeout
-  var waitTimeout
+  var listenTimeout = useRef()
 
   const play = async (element) => {
 
@@ -121,47 +121,6 @@ const Board = ({
 
   }
 
-  const waitForOpponent = async () => {
-    console.log("WAIT..............................")
-
-    const params = {
-        game_id: game.id,
-        account_id: account.id
-    }
-
-    const resp = await fetch(API_URL + 'wait', {
-      method: 'POST',
-      body: JSON.stringify(params), 
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
-    const data = await resp.json()
-
-    if ( !data ) {
-      alert("WAITING CONNECTION ERROR")
-    }
-
-    if ( data.status === 'CREATED' ) {
-      waitTimeout = setTimeout(waitForOpponent, 5000)
-      return
-    }
-
-    if ( data.status === 'STARTED' ) {
-      setGame(prevGame => ({
-        ...prevGame,
-        opponent_id: data.opponent_id,
-        opponent_name: data.opponent_name,
-        status: 'STARTED',
-        current_round: 1
-      }))
-      setStage(stages.STARTED)
-      listenMoves()
-    } 
-
-  }
 
   const updatePassword = (e) => {
     setPassword(e.target.value)
@@ -261,7 +220,7 @@ const Board = ({
  
 
     if (data.status === 'STARTED' || data.status === 'CREATED') {
-      listenTimeout = setTimeout(listenMoves, 5000)
+      listenTimeout.current = setTimeout(listenMoves, 5000)
     }
 
   }
@@ -313,8 +272,7 @@ const Board = ({
   useEffect(() => {
     setPassword(generatePassword(14))
     return () => {
-      clearTimeout(listenTimeout)
-      clearTimeout(waitTimeout)
+      clearTimeout(listenTimeout.current)
     }
   }, [])
 
@@ -323,22 +281,6 @@ const Board = ({
     listenMoves()
   }, [game.opponent])
 
-
-  useEffect(() => {
-    console.log("CHECKING status:", stage, stages.STARTED)
-    if ( stage === stages.STARTED && game.id ) {
-      // listenMoves()
-    }
-    console.log("CHECKING IF WAIT")
-    if ( stage === stages.CREATED && game.id ) {
-      console.log("WAITING")
-      waitForOpponent()
-    }
-  }, [stage])
-
-
-
-  // console.log("MOVES:", moves)
 
   let winner = 'L'
   if (game.winner === player) winner = 'W'
@@ -404,18 +346,18 @@ const Board = ({
 
 
 Board.propTypes = {
-  stage: PropTypes.object.isRequired,
+  stage: PropTypes.number.isRequired,
   setStage: PropTypes.func.isRequired,
   game: PropTypes.object,
-  setGame: PropTypes.object,
-  moves: PropTypes.object,
-  setMoves: PropTypes.object,
+  setGame: PropTypes.func,
+  moves: PropTypes.array,
+  setMoves: PropTypes.func,
   round: PropTypes.object,
-  opponentMoves: PropTypes.object,
-  setOpponentMoves: PropTypes.object,
+  opponentMoves: PropTypes.array,
+  setOpponentMoves: PropTypes.func,
   account: PropTypes.object,
-  setAccount: PropTypes.object,
-  player: PropTypes.object,
+  setAccount: PropTypes.func,
+  player: PropTypes.number,
 };
 
 export default Board;

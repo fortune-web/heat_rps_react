@@ -136,11 +136,11 @@ const Payment = ({
   }
 
 
-  const updatePassword = () => {
+  const updatePassword = (value) => {
     setAccount((account)=>(
       {
         ...account,
-        password: document.getElementById('password').value,
+        password: value,
       }))
     console.log("updatepass:", game)
   // console.log("MOVES:", moves)
@@ -188,7 +188,7 @@ const Payment = ({
   (game.status !== 'FUNDED') && 
   <div>
       <h2 className="loginAdvice">If you already have a password, login:</h2>
-      <input placeholder="Password" id="password" type="text" className="inpPassword" onChange={()=>updatePassword()} value={account.password} /> 
+      <input placeholder="Password" id="password" type="text" className="inpPassword" onChange={(e)=>updatePassword(e.target.value)} value={account.password || ''} /> 
       <button onClick={()=>enterGame(game)}>ENTER</button>
   </div>
 }
@@ -205,7 +205,7 @@ const Payment = ({
 }
 
 Payment.propTypes = {
-  stage: PropTypes.object,
+  stage: PropTypes.number,
   setStage: PropTypes.func,
   game: PropTypes.object,
   setGame: PropTypes.func,

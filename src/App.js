@@ -26,7 +26,7 @@ const App = () => {
     secret: config.ACCOUNT.SECRET,
     id: config.ACCOUNT.ID,
   })
-  const [ bets, setBets ] = useState({});
+  const [ bets, setBets ] = useState([]);
 
   const enterGame = async (game) => {
 
