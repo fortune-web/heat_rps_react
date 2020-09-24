@@ -1,6 +1,6 @@
 input[type=button] {
     padding: 6px 10px;
-    background-color: #e6d597;
+    background-color: #e0a329;
     border: none;
     border-radius: 2px;
     font-size: 12pt;
@@ -9,7 +9,7 @@ input[type=button] {
 }
 
 input[type=button]:hover {
-  background-color: #c0b070;
+  background-color: #9d6900;
 }
 
 .App {

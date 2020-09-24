@@ -2,11 +2,8 @@ import React, {}from 'react';
 import PropTypes from 'prop-types';
 
 // Bootstrap
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Container from 'react-bootstrap/Container';
 
 import './Bet.css';
 
@@ -15,8 +12,6 @@ const Bet = ({ bet, enterGame, loadGame }) => {
   const startGame = () => {
     enterGame(bet)
   }
-
-  // if ( !bet.account_id ) return null
     
   return (
     <Row className="mr-1 mb-3 justify-content-md-center">

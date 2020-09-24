@@ -9,6 +9,12 @@ import PropTypes from 'prop-types';
 // Components
 import GameInfo from '../GameInfo/GameInfo';
 
+// Bootstrap
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import './Payment.css';
 import { stages, API_URL, mainAccount } from '../../config.js';
 
@@ -150,7 +156,7 @@ const Payment = ({
     <div className="Payment">
 
     <GameInfo game={game}/>
-    <button onClick={()=>resetGame()}>BACK TO LOBBY</button> 
+    <button style={{margin:"20px"}} onClick={()=>resetGame()}>BACK TO LOBBY</button> 
 
 {
   game.status === 'FUNDED' && // After the payment is made
@@ -176,7 +182,7 @@ const Payment = ({
       <h2>After that, press the button:</h2>
       {
       !isPaying &&
-      <button onClick={()=>paid()}>PAYMENT MADE</button> 
+      <Button onClick={()=>paid()}>PAYMENT MADE</Button> 
       }
       {
       isPaying &&
@@ -187,9 +193,17 @@ const Payment = ({
 {
   (game.status !== 'FUNDED') && 
   <div>
-      <h2 className="loginAdvice">If you already have a password, login:</h2>
-      <input placeholder="Password" id="password" type="text" className="inpPassword" onChange={(e)=>updatePassword(e.target.value)} value={account.password || ''} /> 
-      <button onClick={()=>enterGame(game)}>ENTER</button>
+    <Row className="pt-4 justify-content-md-center">
+        <h2 className="loginAdvice">If you already have a password, login:</h2>
+    </Row>
+    <Row className="pt-2 pb-4 justify-content-md-center">
+        <Col xs lg={4}>
+          <Form.Control style={{align:"right"}}type="text" placeholder="Password" id="password" className="inpPassword" onChange={(e)=>updatePassword(e.target.value)} value={account.password || ''} /> 
+        </Col>
+        <Col xs lg="2">
+          <Button style={{width:"100%"}} className="pl-1" onClick={()=>enterGame(game)}>ENTER</Button>
+        </Col>
+    </Row>
   </div>
 }
       {

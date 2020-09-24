@@ -72,6 +72,18 @@
 }
 
 
+
+.mainAccount {
+	border: 1px solid #2c2c2c;
+    max-width: 300px;
+    padding: 6px 2px 8px 2px;
+    background-color: #ffcd50;
+    color: #322d2a;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 8px auto;
+}
+
 .gameAdvice {
 	color:#cb3;
 }
