@@ -1,6 +1,8 @@
 import React, {
   useState, 
   useEffect,
+  useRef,
+  useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -21,9 +23,11 @@ const Payment = ({
 
   const [ isPaying, setPaying ] = useState(false)
 
-  var opponentTimeout
+  var opponentTimeout = useRef()
+
 
   const paid = async () => {
+
 
     const params = {
         game_id: game.id,
@@ -78,8 +82,7 @@ const Payment = ({
 
   }
 
-
-  const checkStatus = async () => {
+  const checkStatus = useCallback(async () => {
 
     const params = {
       game_id: game.id
@@ -100,8 +103,8 @@ const Payment = ({
     console.log("LOADJSON:", data)
 
     if (data.status === 'FUNDED') {
-      opponentTimeout = setTimeout(checkStatus,5000)
-      return
+      opponentTimeout.current = setTimeout(checkStatus,5000)
+      // return
     }
 
     if (data.status === 'STARTED') {
@@ -113,7 +116,7 @@ const Payment = ({
       }))
       setStage(stages.STARTED)
     }
-  }
+  }, [game, setGame, setStage])
 
 
   useEffect(() => {
@@ -121,9 +124,9 @@ const Payment = ({
       checkStatus()
     }
     return () => {
-      clearTimeout(opponentTimeout)
+      clearTimeout(opponentTimeout.current)
     }
-  }, [game.status])
+  }, [game.status, checkStatus])
 
 
   const resetGame = () => {

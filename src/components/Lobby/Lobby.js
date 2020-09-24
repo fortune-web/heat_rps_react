@@ -1,5 +1,7 @@
 import React, { 
   useEffect,
+  useRef,
+  useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -10,17 +12,9 @@ import { stages, API_URL } from '../../config.js';
 
 const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
 
-  var betsTimeout
+  var betsTimeout = useRef()
   
-  useEffect(() => {
-    fetchBets()
-    return () => {
-      clearTimeout(betsTimeout)
-    }
-  }, [])
-
-
-  const fetchBets = async() => {
+  const fetchBets = useCallback(async() => {
 
     const params = {
       filter: 'all'
@@ -44,8 +38,8 @@ const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
       alert("BETS CONNECTION ERROR")
     }
 
-    betsTimeout = setTimeout(fetchBets,5000)
-  }
+    betsTimeout.current = setTimeout(fetchBets,5000)
+  }, [setBets])
 
 const createGame = async () => {
 
@@ -102,6 +96,16 @@ const createGame = async () => {
     }
 
 }
+
+
+  useEffect(() => {
+    fetchBets()
+    return () => {
+      clearTimeout(betsTimeout.current)
+    }
+  }, [fetchBets])
+
+
 
   return (
 
