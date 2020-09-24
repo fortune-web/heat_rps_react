@@ -7,6 +7,13 @@ import PropTypes from 'prop-types';
 
 import Bet from '../Bet/Bet';
 
+// Bootstrap
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
+
 import './Lobby.css';
 import { stages, API_URL } from '../../config.js';
 
@@ -109,35 +116,50 @@ const createGame = async () => {
 
   return (
 
-    <div className="Lobby">
-    { 
-    bets && bets.length > 0 && 
-      bets.map((bet, index) => {
-        return <Bet 
-          bet={bet}
-          enterGame={enterGame}
-          loadGame={loadGame}
-          key={index}
-          />
-      })
-    }
-      <p>
-      <input placeholder="Amount to bet" id="amount" type="text" className="inpAmount" />
-      </p>
-      <p>
-      <select id="rounds" type="text" className="inpRounds" >
-        <option value="5">Short (5 rounds)</option>
-        <option value="10">Long (10 rounds)</option>
-      </select> 
-      </p>
-      <p>
-        <select defaultValue="0" id="private" type="text" className="inpRounds" >
-          <option value="1">Private</option>
-          <option value="0">Public</option>
-        </select> 
-      </p>
-    <p><input className="inputButton" type="button" onClick={() => createGame()} value="MAKE BET" /></p>
-    </div>
+    <Container fluid="md" className="Lobby">
+      <Row className="justify-content-md-center">
+      { 
+      bets && bets.length > 0 && 
+        bets.map((bet, index) => {
+          return <Col lg="2">
+            <Bet 
+              bet={bet}
+              enterGame={enterGame}
+              loadGame={loadGame}
+              key={index}
+              />
+          </Col>
+        })
+      }
+      </Row>
+      <Row className="pt-5 justify-content-md-center">
+        <h5>Start a new game</h5>
+      </Row>
+      <Row className="justify-content-md-center">
+        <Col xs={3} className="p-2">
+          <Form.Control type="text" placeholder="Amount to bet" id="amount" className="inpAmount" />
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center">
+        <Col xs={3} className="p-2">
+          <Form.Control as="select" id="rounds" type="text" className="inpRounds" >
+            <option value="5">Short (5 rounds)</option>
+            <option value="10">Long (10 rounds)</option>
+          </Form.Control> 
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center">
+        <Col xs={3} className="p-2">
+          <Form.Control as="select" defaultValue="0" id="private" type="text">
+            <option value="1">Private</option>
+            <option value="0">Public</option>
+          </Form.Control> 
+        </Col>
+      </Row>
+    <Row xs={3} className="pt-4 justify-content-md-center">
+      <Button onClick={() => createGame()} >MAKE BET</Button>
+    </Row>
+    </Container>
   );
 }
 

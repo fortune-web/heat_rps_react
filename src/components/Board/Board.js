@@ -2,6 +2,7 @@ import React, {
   useState, 
   useEffect,
   useRef,
+  useCallback,
 } from 'react';
 
 import PropTypes from 'prop-types';
@@ -171,7 +172,7 @@ const Board = ({
   }
 
 
-  const listenMoves = async () => {
+  const listenMoves = useCallback(async () => {
     console.log("LISTEN...................")
     console.log("game:", game)
     console.log("stage:", stage)
@@ -223,7 +224,9 @@ const Board = ({
       listenTimeout.current = setTimeout(listenMoves, 5000)
     }
 
-  }
+  } )
+
+
 
   const resetGame = () => {
     setGame(null)
