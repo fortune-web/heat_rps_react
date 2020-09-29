@@ -14,17 +14,17 @@ const Bet = ({ bet, enterGame, loadGame }) => {
   }
     
   return (
-    <Row className="mr-1 mb-3 justify-content-md-center">
-      <Col md="auto" lg="12" className="Bet">
-        <Row className="betid justify-content-md-center"># {bet.id}</Row>
-        <Row md="auto" className="category account justify-content-md-center">ACCOUNT</Row>
-        <Row className="justify-content-md-center">{bet.account_name1 || bet.account_id1 || '-'}</Row>
+    <Row className="mr-1 mb-3 justify-content-center">
+      <Col xs="8" sm="4" md="4" lg="12" className="Bet">
+        <Row className="betid justify-content-center"># {bet.id}</Row>
+        <Row md="auto" className="category account justify-content-center">ACCOUNT</Row>
+        <Row className="justify-content-center">{bet.account_name1 || bet.account_id1 || '-'}</Row>
 
-        <Row className="category amount justify-content-md-center">AMOUNT</Row>
-        <Row className="justify-content-md-center">{bet.amount / 100000000} HEAT</Row>
+        <Row className="category amount justify-content-center">AMOUNT</Row>
+        <Row className="justify-content-center">{bet.amount / 100000000} HEAT</Row>
         
-        <Row className="category rounds justify-content-md-center">ROUNDS</Row>
-        <Row className="justify-content-md-center">{bet.rounds}</Row>
+        <Row className="category rounds justify-content-center">ROUNDS</Row>
+        <Row className="justify-content-center">{bet.rounds}</Row>
         
         <div>
         {

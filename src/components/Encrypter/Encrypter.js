@@ -6,6 +6,8 @@ import HGame from '@ethernity/heat-games';
 // Components
 import './Encrypter.css';
 
+HGame.Config({isTestnet: true})
+
 
 const Encrypter = () => {
 

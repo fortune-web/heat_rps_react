@@ -20,6 +20,7 @@ import { stages, API_URL } from '../../config.js';
 
 import crypto from 'crypto';
 
+HGame.Config({isTestnet: true})
 
 const Board = ({ 
   stage, setStage, 

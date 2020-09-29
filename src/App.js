@@ -6,13 +6,14 @@ import React, {
 // heat Game Library
 import HGame from '@ethernity/heat-games';
 
-import { config, stages, API_URL } from './config.js';
+import { stages, API_URL } from './config.js';
 
 import './App.css';
 import Lobby from './components/Lobby/Lobby';
 import Board from './components/Board/Board';
 import Payment from './components/Payment/Payment';
 
+HGame.Config({isTestnet: true})
 
 const App = () => {
 
@@ -21,12 +22,9 @@ const App = () => {
   const [ opponentMoves, setOpponentMoves ] = useState([]);
   const [ player, setPlayer ] = useState(null);
   const [ game, setGame ] = useState({});
-  const [ account, setAccount ] = useState({
-    name: config.ACCOUNT.NAME,
-    secret: config.ACCOUNT.SECRET,
-    id: config.ACCOUNT.ID,
-  })
+  const [ account, setAccount ] = useState({})
   const [ bets, setBets ] = useState([]);
+
 
   const enterGame = async (game) => {
 

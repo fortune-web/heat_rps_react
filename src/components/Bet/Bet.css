@@ -11,7 +11,7 @@
     width: 100%;
 
     text-align: center;
-    font-size: 9pt;
+    font-size: 10pt;
     background: #222;
 }
 
@@ -20,6 +20,7 @@
 	font-weight: bold;
 	margin-top: 8px;
 	font-size: 11pt;
+	background: #6a515466;
 }
 
 .category span {

@@ -117,7 +117,7 @@ const createGame = async () => {
   return (
 
     <Container fluid="md" className="Lobby">
-      <Row className="justify-content-md-center">
+      <Row className="justify-content-center">
       { 
       bets && bets.length > 0 && 
         bets.map((bet, index) => {
@@ -132,33 +132,35 @@ const createGame = async () => {
         })
       }
       </Row>
-      <Row className="pt-5 justify-content-md-center">
+      <Row className="pt-5 justify-content-center">
         <h5>Start a new game</h5>
       </Row>
-      <Row className="justify-content-md-center">
-        <Col xs={3} className="p-2">
+      <Row className="justify-content-center">
+        <Col xs={8} md={6} className="p-2">
           <Form.Control type="text" placeholder="Amount to bet" id="amount" className="inpAmount" />
         </Col>
       </Row>
-      <Row className="justify-content-md-center">
-        <Col xs={3} className="p-2">
+      <Row className="justify-content-center">
+        <Col xs={8} md={6} className="p-2">
           <Form.Control as="select" id="rounds" type="text" className="inpRounds" >
             <option value="5">Short (5 rounds)</option>
             <option value="10">Long (10 rounds)</option>
           </Form.Control> 
         </Col>
       </Row>
-      <Row className="justify-content-md-center">
-        <Col xs={3} className="p-2">
+      <Row className="justify-content-center">
+        <Col xs={8} md={6} className="p-2">
           <Form.Control as="select" defaultValue="0" id="private" type="text">
             <option value="1">Private</option>
             <option value="0">Public</option>
           </Form.Control> 
         </Col>
       </Row>
-    <Row xs={3} className="pt-4 justify-content-md-center">
-      <Button onClick={() => createGame()} >MAKE BET</Button>
-    </Row>
+      <Row className="pt-4 pb-4 justify-content-center">
+        <Col lg xs={8} md={6}>
+          <Button onClick={() => createGame()} >MAKE BET</Button>
+        </Col>
+      </Row>
     </Container>
   );
 }
