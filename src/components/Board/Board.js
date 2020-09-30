@@ -39,7 +39,6 @@ const Board = ({
 
   const play = async (element) => {
 
-    console.log("PLAY........................")
     if ( element === '?' ) return
 
     if ( game.current_round <= moves.length ) {
@@ -61,77 +60,64 @@ const Board = ({
       move: message
     })
 
-        let _moves = moves;
-        _moves.push({
-          card: element,
-          password,
-          message
-        })
-        // setMoves(_moves)
+    let _moves = moves;
+    _moves.push({
+      card: element,
+      password,
+      message
+    })
 
-        const params = {
-          game_id: game.id,
-          account_id: account.id,
-          account_password: account.password,
-          move: messageJson,
-          password: password,
-          round: game.current_round,
-          player,
-          card: element,
+    const params = {
+      game_id: game.id,
+      account_id: account.id,
+      account_password: account.password,
+      move: messageJson,
+      password: password,
+      round: game.current_round,
+      player,
+      card: element,
+    }
+
+    try {
+      const resp = await fetch(API_URL + 'move', {
+        method: 'POST',
+        body: JSON.stringify(params), 
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
         }
+      })
 
-        console.log("MOVEPOST:", params)
-
-        try {
-          const resp = await fetch(API_URL + 'move', {
-            method: 'POST',
-            body: JSON.stringify(params), 
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-
-          console.log("MOVED:", resp)
-          if(resp && resp.ok) {
-
-            setPassword(generatePassword(14))
-
-            const data = await resp.json()
-
-            console.log("MOVERESULT:", data)
-
-            if ( data.finished ) {
-              // Game ended
-              setStage(stages.FINISHED)
-              setGame(prevGame => ({
-                ...prevGame,
-                status: 'FINISHED',
-                winner: data.winner
-              }))
-            }
-
-          } else {
-            alert("Move data error")
-          }
-          setWaiting(false)
-        } catch(e) {
-          alert("Error sending the move:", e)
-          setWaiting(false)
-          return
+      if (resp && resp.ok) {
+        setPassword(generatePassword(14))
+        const data = await resp.json()
+        if (data.finished) {
+          setStage(stages.FINISHED)
+          setGame(prevGame => ({
+            ...prevGame,
+            status: 'FINISHED',
+            winner: data.winner
+          }))
         }
+      } else { // Resp not ok
+        alert("Move data error")
+      }
+      setWaiting(false)
+    } catch(e) {
+      alert("Error sending the move:", e)
+      setWaiting(false)
+      return
+    }
 
   }
 
-
-  const updatePassword = (e) => {
+  const updatePassword = e => {
     setPassword(e.target.value)
   }
 
-  const generatePassword = (length) => {
+  const generatePassword = length => {
     return crypto.randomBytes(length).toString('hex').slice(0,-1)
-    // return HGame.randomBytes()
-}
+  }
 
   const showWinner = (playerCard, opponentCard) => {
     if (!opponentCard) return {
@@ -174,9 +160,6 @@ const Board = ({
 
 
   const listenMoves = useCallback(async () => {
-    console.log("LISTEN...................")
-    console.log("game:", game)
-    console.log("stage:", stage)
 
     const params = {
         game_id: game.id,
@@ -199,7 +182,6 @@ const Board = ({
       alert("LISTENING CONNECTION ERROR")
     }
 
-    console.log("LISTEN:", data)
     if (player === 1) {
       setOpponentMoves(data.player2)
       setMoves(data.player1)
@@ -228,7 +210,6 @@ const Board = ({
   } )
 
 
-
   const resetGame = () => {
     setGame(null)
     setAccount({})
@@ -244,7 +225,6 @@ const Board = ({
       ((round < opponentMoves.length && round < moves.length) || game.status === 'STARTED'); 
       round++) {
       
-      // console.log("Gstatus:", game.status)
         let winner = showWinner(moves[round]?.card, opponentMoves[round]?.card)
         resp.push (
           <div className={"roundsInfo" + winner.letter} key={round}>
@@ -289,6 +269,7 @@ const Board = ({
   let winner = 'L'
   if (game.winner === player) winner = 'W'
   if (game.winner === 3) winner = 'D'
+
   return (
     <div className="Board">
 

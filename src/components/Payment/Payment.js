@@ -28,12 +28,9 @@ const Payment = ({
 }) => {
 
   const [ isPaying, setPaying ] = useState(false)
-
   var opponentTimeout = useRef()
 
-
   const paid = async () => {
-
 
     const params = {
         game_id: game.id,
@@ -54,8 +51,6 @@ const Payment = ({
     
     const data = await resp.json()
 
-    console.log("PAID:", data)
-
     if ( !data ) {
       alert("LISTENING CONNECTION ERROR")
       return
@@ -66,25 +61,21 @@ const Payment = ({
       return
     }
 
-
-    if ( data.status === "OK") {
-      setGame(prevGame=>({
-        ...prevGame,
-        pin: data.pin,
-        player: data.player,
-        opponent_id: data.opponent_id,
-        opponent_name: data.opponent_name,
-        status: data.player === 1 ? 'FUNDED' : 'STARTED'
-      }))
-      setAccount({
-        id: data.account_id,
-        name: data.account_name,
-        password: data.password
-      })
-
-      setPlayer(data.player)
-      setStage(data.player === 1 ? stages.FUNDED : stages.STARTED)
-    }
+    setGame(prevGame=>({
+      ...prevGame,
+      pin: data.pin,
+      player: data.player,
+      opponent_id: data.opponent_id,
+      opponent_name: data.opponent_name,
+      status: data.player === 1 ? 'FUNDED' : 'STARTED'
+    }))
+    setAccount({
+      id: data.account_id,
+      name: data.account_name,
+      password: data.password
+    })
+    setPlayer(data.player)
+    setStage(data.player === 1 ? stages.FUNDED : stages.STARTED)
 
   }
 
@@ -93,7 +84,7 @@ const Payment = ({
     const params = {
       game_id: game.id
     }
-    console.log("PREVLOAD:", params)
+
     const resp = await fetch(API_URL + 'load', {
       method: 'POST',
       body: JSON.stringify(params),
@@ -103,14 +94,10 @@ const Payment = ({
       }
     })
 
-    console.log("LOAD:", resp)
     const data = await resp.json()
-
-    console.log("LOADJSON:", data)
 
     if (data.status === 'FUNDED') {
       opponentTimeout.current = setTimeout(checkStatus,5000)
-      // return
     }
 
     if (data.status === 'STARTED') {
@@ -141,16 +128,14 @@ const Payment = ({
     setStage(stages.LOBBY)
   }
 
-
   const updatePassword = (value) => {
     setAccount((account)=>(
       {
         ...account,
         password: value,
-      }))
-    console.log("updatepass:", game)
-  // console.log("MOVES:", moves)
-}
+      })
+    )
+  }
 
   return (
     <div className="Payment">
@@ -158,62 +143,62 @@ const Payment = ({
     <GameInfo game={game}/>
     <button style={{margin:"20px"}} onClick={()=>resetGame()}>BACK TO LOBBY</button> 
 
-{
-  game.status === 'FUNDED' && // After the payment is made
-  <div>
-    <h2 className="gameAdvice">Game is funded. Waiting for an opponent to bet.</h2>
-    <h2 className="gameAdvice">Game will begin when an opponent joins</h2>
-    <h2>Save your password to reenter the game anytime:</h2>
-    <h3>{account.password}</h3>
+    {
+      game.status === 'FUNDED' && // After the payment is made
+      <div>
+        <h2 className="gameAdvice">Game is funded. Waiting for an opponent to bet.</h2>
+        <h2 className="gameAdvice">Game will begin when an opponent joins</h2>
+        <h2>Save your password to reenter the game anytime:</h2>
+        <h3>{account.password}</h3>
 
-  </div>
-}
-{
-  game.status === 'CREATED' && // When entering a FUNDED game for first time
-  <h2 className="gameAdvice">Game is waiting for funds. Make your bet to start the game</h2>
-}
-{
-  (game.status === 'CREATED' || (game.status === 'FUNDED' && !account.id)) &&
-  <div>
-      <h2>To make your bet, send {game.amount / 100000000} HEAT to the account:</h2>
-      <div className="mainAccount">{mainAccount}</div>
-      <h2>With the message:</h2>
-      <div className="mainAccount">{game.id}</div>
-      <h2>After that, press the button:</h2>
-      {
-      !isPaying &&
-      <Button onClick={()=>paid()}>PAYMENT MADE</Button> 
-      }
-      {
-      isPaying &&
-      <p>CHECKING PAYMENT</p> 
-      }
-  </div>
-}
-{
-  (game.status !== 'FUNDED') && 
-  <div>
-    <Row className="pt-4 justify-content-md-center">
-        <h2 className="loginAdvice">If you already have a password, login:</h2>
-    </Row>
-    <Row className="pt-2 pb-4 justify-content-md-center">
-        <Col xs lg={4}>
-          <Form.Control style={{align:"right"}}type="text" placeholder="Password" id="password" className="inpPassword" onChange={(e)=>updatePassword(e.target.value)} value={account.password || ''} /> 
-        </Col>
-        <Col xs lg="2">
-          <Button style={{width:"100%"}} className="pl-1" onClick={()=>enterGame(game)}>ENTER</Button>
-        </Col>
-    </Row>
-  </div>
-}
-      {
-        stage === stages.FINISHED &&
-        <div className='finalBoard'>
-          <h2>GAME FINISHED</h2>
-          <h2>{ (game.winner === 0) ? 'IT IS A DRAW!' : (game.winner === player) ? 'YOU WON THE GAME!' : 'YOU LOSE THE GAME!' }</h2>
-        </div>
-      }
-      
+      </div>
+    }
+    {
+      game.status === 'CREATED' && // When entering a FUNDED game for first time
+      <h2 className="gameAdvice">Game is waiting for funds. Make your bet to start the game</h2>
+    }
+    {
+      (game.status === 'CREATED' || (game.status === 'FUNDED' && !account.id)) &&
+      <div>
+          <h2>To make your bet, send {game.amount / 100000000} HEAT to the account:</h2>
+          <div className="mainAccount">{mainAccount}</div>
+          <h2>With the message:</h2>
+          <div className="mainAccount">{game.id}</div>
+          <h2>After that, press the button:</h2>
+          {
+          !isPaying &&
+          <Button onClick={()=>paid()}>PAYMENT MADE</Button> 
+          }
+          {
+          isPaying &&
+          <p>CHECKING PAYMENT</p> 
+          }
+      </div>
+    }
+    {
+      (game.status !== 'FUNDED') && 
+      <div>
+        <Row className="pt-4 justify-content-md-center">
+            <h2 className="loginAdvice">If you already have a password, login:</h2>
+        </Row>
+        <Row className="pt-2 pb-4 justify-content-md-center">
+            <Col xs lg={4}>
+              <Form.Control style={{align:"right"}}type="text" placeholder="Password" id="password" className="inpPassword" onChange={(e)=>updatePassword(e.target.value)} value={account.password || ''} /> 
+            </Col>
+            <Col xs lg="2">
+              <Button style={{width:"100%"}} className="pl-1" onClick={()=>enterGame(game)}>ENTER</Button>
+            </Col>
+        </Row>
+      </div>
+    }
+    {
+      stage === stages.FINISHED &&
+      <div className='finalBoard'>
+        <h2>GAME FINISHED</h2>
+        <h2>{ (game.winner === 0) ? 'IT IS A DRAW!' : (game.winner === player) ? 'YOU WON THE GAME!' : 'YOU LOSE THE GAME!' }</h2>
+      </div>
+    }
+          
     </div>
   );
 }

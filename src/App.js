@@ -41,31 +41,26 @@ const App = () => {
       return
     }
 
-      const params = {
-        game_id: game.id,
-        password: account.password,
+    const params = {
+      game_id: game.id,
+      password: account.password,
+    }
+
+    const resp = await fetch(API_URL + 'start', {
+      method: 'POST',
+      body: JSON.stringify(params),
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
       }
+    })
 
-      console.log("LOAD:", params)
+    const data = await resp.json()
 
-      const resp = await fetch(API_URL + 'start', {
-        method: 'POST',
-        body: JSON.stringify(params),
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-
-      const data = await resp.json()
-
-      console.log("STARTED:", data)
-
-      if (data.error) {
-        alert(data.error)
-        return
-      }
-
+    if (data.error) {
+      alert(data.error)
+      return
+    }
 
     setPlayer(data.player)
 
@@ -81,72 +76,57 @@ const App = () => {
       status: data.status,
       current_round: 1
     })
+
     setAccount(oldAccount=>({
       ...oldAccount,
       id: data.account_id,
       name: data.account_name,
     }))
+
     setStage(
       (data.status === 'CREATED') ? stages.CREATED : 
       (data.status === 'FINISHED') ? stages.FINISHED : 
       (data.status === 'STARTED') ? stages.STARTED :
       (data.status === 'FUNDED') ? stages.FUNDED : 
       stages.STARTED)
-    
   }
 
   const loadGame = async (bet) => {
 
-      const params = {
-        game_id: bet.id,
+    const params = {
+      game_id: bet.id,
+    }
+
+    const resp = await fetch(API_URL + 'load', {
+      method: 'POST',
+      body: JSON.stringify(params),
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
       }
-      console.log("LOADGAME:", params)
-      const resp = await fetch(API_URL + 'load', {
-        method: 'POST',
-        body: JSON.stringify(params),
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+    })
+
+    const data = await resp.json()
+
+    if (resp.ok) {
+      setGame({
+        id: bet.id,
+        pin: data.game_pin,
+        amount: data.amount,
+        rounds: data.rounds,
+        status: 'LOGIN'
       })
-
-      const data = await resp.json()
-      console.log("LOADED:", data)
-
-      if (resp.ok) {
-        setGame({
-          id: bet.id,
-          pin: data.game_pin,
-          amount: data.amount,
-          rounds: data.rounds,
-          status: 'LOGIN'
-        })
-        setStage(stages.LOGIN) 
-      }
+      setStage(stages.LOGIN) 
+    }
 
   }
-
-  useEffect(() => { async function getAccount() {
-      if (account.secret) {
-        const gameData = await HGame.getAccountBySecret(account.secret)
-        console.log("ACC:", gameData)
-        setAccount(newAcc=>({
-          secret: newAcc.secret,
-          id: gameData.id,
-          name: gameData.publicName
-        }))
-      }
-    }
-    getAccount()
-  }, [account.secret])
-
 
   return (
     <div className="App">
       <div className="container">
 
       {
-        stage === stages.LOBBY && // 1
+        stage === stages.LOBBY && 
         <Lobby 
           enterGame={enterGame}
           loadGame={loadGame}
@@ -159,7 +139,7 @@ const App = () => {
         />
       }
       {
-        (stage === stages.CREATED || stage === stages.FUNDED || stage === stages.LOGIN ) && // 1
+        (stage === stages.CREATED || stage === stages.FUNDED || stage === stages.LOGIN ) && 
         <Payment 
           enterGame={enterGame}
           account={account}
@@ -174,7 +154,7 @@ const App = () => {
         />
       }       
       {
-        (stage === stages.STARTED || stage === stages.FINISHED) && // 2
+        (stage === stages.STARTED || stage === stages.FINISHED) && 
         <Board 
           stage={stage}
           setStage={setStage} 

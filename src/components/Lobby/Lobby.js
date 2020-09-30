@@ -22,11 +22,9 @@ const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
   var betsTimeout = useRef()
   
   const fetchBets = useCallback(async() => {
-
     const params = {
       filter: 'all'
     }
-
     const resp = await fetch(API_URL + 'bets', {
       method: 'POST',
       body: JSON.stringify(params),
@@ -35,16 +33,12 @@ const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
         'Content-Type': 'application/json'
       }
     })
-
     const data = await resp.json()
-
     if (data) {
       setBets(data)
-      console.log("BETS:", data)
     } else {
       alert("BETS CONNECTION ERROR")
     }
-
     betsTimeout.current = setTimeout(fetchBets,5000)
   }, [setBets])
 
@@ -54,6 +48,7 @@ const createGame = async () => {
       alert("Please fill an amount to bet")
       return
     }
+    
     const params = {
       amount: document.getElementById('amount').value * 100000000,
       rounds: document.getElementById('rounds').value,
@@ -76,18 +71,7 @@ const createGame = async () => {
 
     const data = await resp.json()
 
-    console.log("CREATEGAME:", data)
-
     if (data) {
-/*      const bet = {
-        id: data.game_id,
-        game_pin: data.game_pin,
-        amount: params.amount,
-        rounds: params.rounds,
-        private: params.private,
-        status: data.status
-      }*/
-     // setBets(bet)
       setGame({
           id: data.game_id,
           pin: data.game_pin,
@@ -96,7 +80,6 @@ const createGame = async () => {
           status: 'CREATED',
           current_round: 1
       })
-      // loadGame(bet)
       setStage(stages.CREATED)
     } else {
       alert("CONNECTION ERROR")
@@ -104,14 +87,12 @@ const createGame = async () => {
 
 }
 
-
   useEffect(() => {
     fetchBets()
     return () => {
       clearTimeout(betsTimeout.current)
     }
   }, [fetchBets])
-
 
 
   return (
