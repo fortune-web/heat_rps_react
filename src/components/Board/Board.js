@@ -42,8 +42,8 @@ const Board = ({
     if ( element === '?' ) return
 
     if ( game.current_round <= moves.length ) {
-      alert("Wait for your opponent to move")
-      return
+      //alert("Wait for your opponent to move")
+     // return
     }
 
     if ( waiting ) {
@@ -91,6 +91,13 @@ const Board = ({
       if (resp && resp.ok) {
         setPassword(generatePassword(14))
         const data = await resp.json()
+
+        if (data.error) {
+          alert(data.error)
+          setWaiting(false)
+          return
+        }
+        
         if (data.finished) {
           setStage(stages.FINISHED)
           setGame(prevGame => ({

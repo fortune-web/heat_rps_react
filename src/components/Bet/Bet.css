@@ -49,3 +49,15 @@
 	display:block;
 	font-weight: normal;
 }
+
+.start {
+	background-color: #d1b171;
+}
+
+.continue {
+	background-color: #d1b171;
+}
+
+.finished {
+	background-color: #d1b171;
+}

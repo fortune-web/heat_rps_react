@@ -29,15 +29,15 @@ const Bet = ({ bet, enterGame, loadGame }) => {
         <div>
         {
           (bet.status === 'FINISHED') &&
-            <input className="inputButton" type="button" onClick={() => loadGame(bet)} value="FINISHED" />
+            <input className="inputButton finished" type="button" onClick={() => loadGame(bet)} value="FINISHED" />
         }
         {
             (bet.status === 'FUNDED' || bet.status === 'CREATED') &&
-              <input className="inputButton" type="button" onClick={() => startGame()} value="START GAME" />
+              <input className="inputButton start" type="button" onClick={() => startGame()} value="START GAME" />
         }
         {
             (bet.status === 'STARTED') &&
-              <input className="inputButton" type="button" onClick={() => loadGame(bet)} value="CONTINUE GAME" />
+              <input className="inputButton continue" type="button" onClick={() => loadGame(bet)} value="CONTINUE GAME" />
           }
           
         </div>
