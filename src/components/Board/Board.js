@@ -42,8 +42,8 @@ const Board = ({
     if ( element === '?' ) return
 
     if ( game.current_round <= moves.length ) {
-      //alert("Wait for your opponent to move")
-     // return
+      alert("Wait for your opponent to move")
+      return
     }
 
     if ( waiting ) {
