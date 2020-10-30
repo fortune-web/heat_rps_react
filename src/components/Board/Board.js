@@ -35,7 +35,7 @@ const Board = ({
   const [ waiting, setWaiting ] = useState(false) // To wait for the own move to be sent
   const [ password, setPassword ] = useState('')
 
-  var listenTimeout = useRef()
+  var listenTimeout = useRef(null)
 
   const play = async (element) => {
 
@@ -211,10 +211,11 @@ const Board = ({
  
 
     if (data.status === 'STARTED' || data.status === 'CREATED') {
+      clearTimeout(listenTimeout.current)
       listenTimeout.current = setTimeout(listenMoves, 5000)
     }
 
-  } )
+  }, [game.opponent])
 
 
   const resetGame = () => {
@@ -270,7 +271,7 @@ const Board = ({
 
   useEffect(() => {
     listenMoves()
-  }, [game.opponent])
+  }, [listenMoves])
 
 
   let winner = 'L'
