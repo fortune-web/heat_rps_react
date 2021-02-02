@@ -1,5 +1,5 @@
 import React, {
-  useState, 
+  useState,
   useEffect,
   useRef,
   useCallback,
@@ -19,10 +19,10 @@ import './Payment.css';
 import { stages, API_URL, mainAccount } from '../../config.js';
 
 
-const Payment = ({ 
-  stage, setStage, 
-  game, setGame, 
-  account, setAccount,  
+const Payment = ({
+  stage, setStage,
+  game, setGame,
+  account, setAccount,
   player, setPlayer,
   enterGame
 }) => {
@@ -31,7 +31,6 @@ const Payment = ({
   var opponentTimeout = useRef()
 
   const paid = async () => {
-
     const params = {
         game_id: game.id,
     }
@@ -40,7 +39,7 @@ const Payment = ({
 
     const resp = await fetch(API_URL + 'paid', {
       method: 'POST',
-      body: JSON.stringify(params), 
+      body: JSON.stringify(params),
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
@@ -48,8 +47,17 @@ const Payment = ({
     })
 
     setPaying(false)
-    
+
     const data = await resp.json()
+    // const data = {
+    //   account_id: "9550110832640187325",
+    //   account_name: "takeshi@heatwallet.com",
+    //   opponent_id: "6768971178720561498",
+    //   opponent_name: "fatimaflash@heatwallet.com",
+    //   password: "Mp1Dc8wLrid9nfk",
+    //   player: 2,
+    //   status: "OK"
+    // }
 
     if ( !data ) {
       alert("LISTENING CONNECTION ERROR")
@@ -139,10 +147,7 @@ const Payment = ({
 
   return (
     <div className="Payment">
-
-    <GameInfo game={game}/>
-    <button style={{margin:"20px"}} onClick={()=>resetGame()}>BACK TO LOBBY</button> 
-
+    <GameInfo game={game} reset={resetGame}/>
     {
       game.status === 'FUNDED' && // After the payment is made
       <div>
@@ -167,23 +172,23 @@ const Payment = ({
           <h2>After that, press the button:</h2>
           {
           !isPaying &&
-          <Button onClick={()=>paid()}>PAYMENT MADE</Button> 
+          <Button onClick={()=>paid()}>PAYMENT MADE</Button>
           }
           {
           isPaying &&
-          <p>CHECKING PAYMENT</p> 
+          <p>CHECKING PAYMENT</p>
           }
       </div>
     }
     {
-      (game.status !== 'FUNDED') && 
+      (game.status !== 'FUNDED') &&
       <div>
         <Row className="pt-4 justify-content-md-center">
             <h2 className="loginAdvice">If you already have a password, login:</h2>
         </Row>
         <Row className="pt-2 pb-4 justify-content-md-center">
             <Col xs lg={4}>
-              <Form.Control style={{align:"right"}}type="text" placeholder="Password" id="password" className="inpPassword" onChange={(e)=>updatePassword(e.target.value)} value={account.password || ''} /> 
+              <Form.Control style={{align:"right"}}type="text" placeholder="Password" id="password" className="inpPassword" onChange={(e)=>updatePassword(e.target.value)} value={account.password || ''} />
             </Col>
             <Col xs lg="2">
               <Button style={{width:"100%"}} className="pl-1" onClick={()=>enterGame(game)}>ENTER</Button>
@@ -198,7 +203,6 @@ const Payment = ({
         <h2>{ (game.winner === 0) ? 'IT IS A DRAW!' : (game.winner === player) ? 'YOU WON THE GAME!' : 'YOU LOSE THE GAME!' }</h2>
       </div>
     }
-          
     </div>
   );
 }

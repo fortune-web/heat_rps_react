@@ -1,19 +1,17 @@
 import React from 'react';
-
 // heat Game Library
 import HGame from '@ethernity/heat-games';
-
 // Components
+import Button from 'react-bootstrap/Button';
 import './Encrypter.css';
 
 HGame.Config({isTestnet: true})
-
 
 const Encrypter = () => {
 
   const encrypt = () => {
     document.getElementById('encryptedResult').innerText = HGame.aesEncrypt(
-      document.getElementById('decmessage').value, 
+      document.getElementById('decmessage').value,
       document.getElementById('encpassword').value
     )
 
@@ -23,7 +21,7 @@ const Encrypter = () => {
 
     try {
       document.getElementById('decryptedResult').innerText = HGame.aesDecrypt(
-        document.getElementById('encmessage').value, 
+        document.getElementById('encmessage').value,
         document.getElementById('decpassword').value
       )
     }
@@ -38,14 +36,14 @@ const Encrypter = () => {
     <p>Here you can verify that your opponent moves are correctly decrypted when the password is revealed</p>
       <span className='section'>
           <input className='encInput' type='text' placeholder='Encrpyted text' id='encmessage' />
-          <input className='encPassword' type='text' placeholder='Password' id='decpassword' />
-          <button className='encButton' value='Decrypt' onClick={decrypt}>Decrypt</button>
+          <input className='encInput' type='text' placeholder='Password' id='decpassword' />
+          <Button className='encButton' variant="danger" value='Decrypt' onClick={decrypt}>Decrypt</Button>
           <span className='encResult' id='decryptedResult' />
       </span>
       <span className='section'>
           <input className='encInput' type='text' placeholder='Message' id='decmessage' />
-          <input className='encPassword' type='text' placeholder='Password' id='encpassword' />
-          <button className='encButton' value='Encrypt' onClick={encrypt}>Encrypt</button>
+          <input className='encInput' type='text' placeholder='Password' id='encpassword' />
+          <Button className='encButton' variant="danger" value='Encrypt' onClick={encrypt}>Encrypt</Button>
           <span className='encResult' id='encryptedResult' />
       </span>
     </div>

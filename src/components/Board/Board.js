@@ -1,5 +1,5 @@
 import React, {
-  useState, 
+  useState,
   useEffect,
   useRef,
   useCallback,
@@ -22,12 +22,12 @@ import crypto from 'crypto';
 
 HGame.Config({isTestnet: true})
 
-const Board = ({ 
-  stage, setStage, 
-  game, setGame, 
+const Board = ({
+  stage, setStage,
+  game, setGame,
   moves, setMoves,
   round,
-  opponentMoves, setOpponentMoves, 
+  opponentMoves, setOpponentMoves,
   account, setAccount,
   player
 }) => {
@@ -81,7 +81,7 @@ const Board = ({
     try {
       const resp = await fetch(API_URL + 'move', {
         method: 'POST',
-        body: JSON.stringify(params), 
+        body: JSON.stringify(params),
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ const Board = ({
           setWaiting(false)
           return
         }
-        
+
         if (data.finished) {
           setStage(stages.FINISHED)
           setGame(prevGame => ({
@@ -176,7 +176,7 @@ const Board = ({
 
     const resp = await fetch(API_URL + 'listen', {
       method: 'POST',
-      body: JSON.stringify(params), 
+      body: JSON.stringify(params),
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
@@ -208,7 +208,7 @@ const Board = ({
       winner: data.winner
     }))
     setStage((data.status === 'CREATED') ? stages.CREATED : (data.status === 'FINISHED') ? stages.FINISHED : stages.STARTED)
- 
+
 
     if (data.status === 'STARTED' || data.status === 'CREATED') {
       clearTimeout(listenTimeout.current)
@@ -227,35 +227,44 @@ const Board = ({
   const showCards = () => {
     if (!moves || !opponentMoves) return
     let resp = []
-    for(round = 0; 
-      round < game.current_round && 
+    for(round = 0;
+      round < game.current_round &&
       round <= game.rounds &&
-      ((round < opponentMoves.length && round < moves.length) || game.status === 'STARTED'); 
+      ((round < opponentMoves.length && round < moves.length) || game.status === 'STARTED');
       round++) {
-      
         let winner = showWinner(moves[round]?.card, opponentMoves[round]?.card)
         resp.push (
           <div className={"roundsInfo" + winner.letter} key={round}>
-            <div className="roundRound">
-              <p>Round {round + 1}</p>
+            <div>
+              <div className="roundItem">
+                <span className="roundName">Round <br/> {round + 1}</span>
+              </div>
+              <div className="roundItem">
+                <span className="roundName">YOU</span>
+                { moves[round] &&
+                  <Element
+                    element={moves[round] ? moves[round].card : null} active={false}
+                    win={winner.letter}
+                  />
+                }
+              </div>
+              <div className="roundItem">
+                <span className="roundName">OPPONENT</span>
+                { opponentMoves[round] &&
+                  <Element
+                    element={opponentMoves[round] ? opponentMoves[round].card : null}
+                    move={opponentMoves[round] ? opponentMoves[round].move : null}
+                    win={winner.letter === 'W' ? '': 'W'}
+                    active={false} />
+                }
+              </div>
             </div>
-            <div className="roundWinner">
-              <p>{winner.text}</p>
-            </div>
-            <div className="roundItem">
-              <span className="roundName">YOU</span>
-              <Element element={moves[round] ? moves[round].card : null} active={false}
-              />
-            </div>
-            <div className="roundItem">
-              <span className="roundName">OPPONENT</span>
-              <Element 
-              element={opponentMoves[round] ? opponentMoves[round].card : null} 
-              move={opponentMoves[round] ? opponentMoves[round].move : null}
-              password={opponentMoves[round] ? opponentMoves[round].password : null}
-              active={false} />
-            </div>
-          </div>   
+            { winner.text &&
+              <div className={winner.letter === 'W' ? 'roundWinner roundWinner_win': 'roundWinner'}>
+                <span>{winner.text}</span>
+              </div>
+            }
+          </div>
         )
       }
     return resp
@@ -280,14 +289,7 @@ const Board = ({
 
   return (
     <div className="Board">
-
-      <GameInfo game={game}/>
-      
-      <h2>Welcome <span className='name'>{account.name}</span></h2>
-      <p>Password to reenter</p>
-      <p>{account.password}</p>
-
-      <button onClick={()=>resetGame()}>BACK TO LOBBY</button> 
+      <GameInfo game={game} reset={resetGame} name={account.name} password={account.password} />
       {
         stage === stages.FINISHED &&
         <div className={'finalBoard' + winner}>
@@ -297,17 +299,16 @@ const Board = ({
       }
       { (stage === stages.STARTED || stage === stages.FINISHED) && // Once game started
         <div>
-          <h2>Round
-          <span className="roundNumber">{(game.current_round <= game.rounds) ? game.current_round : game.rounds}</span></h2>
-          { 
+          <h3>Round</h3>
+          {
           stage === stages.STARTED &&
             <div className="playerBoard">
-              <h1>Make your move</h1>
+              <span className="roundNumber">{(game.current_round <= game.rounds) ? game.current_round : game.rounds}</span>
+              <h6>Make your move</h6>
               <div className="selectInfo">
                 <Element element='rock' play={play} active={true} />
                 <Element element='paper' play={play} active={true} />
                 <Element element='scissor' play={play} active={true} />
-
               </div>
             </div>
           }
@@ -316,23 +317,24 @@ const Board = ({
             showCards()
           }
           </div>
-
-          { 
-          stage === stages.STARTED &&
-            <div className="passwordInfo">
-              <p>Password to encrypt your move (you can change it)</p>
-              <input className="passwordInput" type="text" value={ password } onChange={ (e) => updatePassword(e) }/>
-            </div>
-          }
         </div>
       }
       {
-        stage === stages.CREATED && 
+        stage === stages.CREATED &&
         <div>
           <h2>Waiting for an opponent to join</h2>
         </div>
       }
-      <Encrypter />
+
+      <div className="roundInfo">
+        { stage === stages.STARTED &&
+          <div className="passwordInfo">
+            <span>Password to encrypt your move (you can change it)</span>
+            <input className="passwordInput" type="text" value={ password } onChange={ (e) => updatePassword(e) }/>
+          </div>
+        }
+        <Encrypter />
+      </div>
     </div>
   );
 }

@@ -1,26 +1,25 @@
-import React, { 
-  useEffect,
-  useRef,
-  useCallback,
-} from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-
 import Bet from '../Bet/Bet';
 
 // Bootstrap
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
-
-import './Lobby.css';
+import Carousel from '@brainhubeu/react-carousel';
+import '@brainhubeu/react-carousel/lib/style.css';
+import LobbyData from './dummy_lobby';
 import { stages, API_URL } from '../../config.js';
+import './Lobby.css';
+import arrow_left from './image/arrow_left.png';
+import arrow_right from './image/arrow_right.png';
+
 
 const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
 
-  var betsTimeout = useRef()
-  
+  const betsTimeout = useRef()
+
   const fetchBets = useCallback(async() => {
     const params = {
       filter: 'all'
@@ -36,19 +35,20 @@ const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
     const data = await resp.json()
     if (data) {
       setBets(data)
+      console.log(data)
     } else {
       alert("BETS CONNECTION ERROR")
     }
     betsTimeout.current = setTimeout(fetchBets,5000)
   }, [setBets])
 
-const createGame = async () => {
+  const createGame = async () => {
 
     if (document.getElementById('amount').value === "" || document.getElementById('amount').value === "0") {
       alert("Please fill an amount to bet")
       return
     }
-    
+
     const params = {
       amount: document.getElementById('amount').value * 100000000,
       rounds: document.getElementById('rounds').value,
@@ -84,8 +84,7 @@ const createGame = async () => {
     } else {
       alert("CONNECTION ERROR")
     }
-
-}
+  }
 
   useEffect(() => {
     fetchBets()
@@ -94,52 +93,72 @@ const createGame = async () => {
     }
   }, [fetchBets])
 
+  const [ selectedArrIdx, setSelectedArrIdx ] = useState(0)
+  const [ selectedIdx, setSelectedIdx ] = useState(0)
+  const onSlideChange = (selectedIndex) => {
+    let idx = selectedIndex % bets.length
+    idx = idx < 0 ? bets.length + idx: idx
+    setSelectedIdx(idx)
+    setSelectedArrIdx(selectedIdx)
+  }
 
   return (
-
-    <Container fluid="md" className="Lobby">
+    <Container className="Lobby">
       <Row className="justify-content-center">
-      { 
-      bets && bets.length > 0 && 
-        bets.map((bet, index) => {
-          return <Col lg="2">
-            <Bet 
-              bet={bet}
-              enterGame={enterGame}
-              loadGame={loadGame}
+      {bets && bets.length > 0 &&
+        <Carousel
+          arrows
+          slidesPerScroll={1}
+          slidesPerPage={5}
+          infinite
+          onChange={onSlideChange}
+        >
+         {bets.map((bet, index) => {
+            return  <Col
+              md="12"
+              className={`bet__box bet__${selectedIdx > index ? index + bets.length - selectedIdx: index - selectedIdx}`}
               key={index}
-              />
-          </Col>
-        })
+            >
+              <Bet
+                bet={bet}
+                enterGame={enterGame}
+                loadGame={loadGame}
+                selected={ selectedIdx > index ? index + bets.length - selectedIdx === 2 : index - selectedIdx === 2 }
+                key={index}
+                />
+            </Col>
+            })
+          }
+        </Carousel>
       }
       </Row>
       <Row className="pt-5 justify-content-center">
-        <h5>Start a new game</h5>
+        <h3>START A NEW GAME</h3>
       </Row>
       <Row className="justify-content-center">
-        <Col xs={8} md={6} className="p-2">
-          <Form.Control type="text" placeholder="Amount to bet" id="amount" className="inpAmount" />
+        <Col xs={8} md={6} className="lobby_input_container">
+          <input type="text" id="amount" placeholder="Amount to bet" name="fname" className="lobby_input" />
         </Col>
       </Row>
       <Row className="justify-content-center">
-        <Col xs={8} md={6} className="p-2">
-          <Form.Control as="select" id="rounds" type="text" className="inpRounds" >
+        <Col xs={8} md={6} className="lobby_input_container">
+          <select  id="rounds" className="lobby_input">
             <option value="5">Short (5 rounds)</option>
             <option value="10">Long (10 rounds)</option>
-          </Form.Control> 
+          </select>
         </Col>
       </Row>
       <Row className="justify-content-center">
-        <Col xs={8} md={6} className="p-2">
-          <Form.Control as="select" defaultValue="0" id="private" type="text">
+        <Col xs={8} md={6} className="lobby_input_container">
+          <select  id="private" defaultValue="0" className="lobby_input">
             <option value="1">Private</option>
             <option value="0">Public</option>
-          </Form.Control> 
+          </select>
         </Col>
       </Row>
       <Row className="pt-4 pb-4 justify-content-center">
         <Col lg xs={8} md={6}>
-          <Button onClick={() => createGame()} >MAKE BET</Button>
+          <Button onClick={() => createGame()} className="lobby_button" variant="danger">MAKE BET</Button>
         </Col>
       </Row>
     </Container>

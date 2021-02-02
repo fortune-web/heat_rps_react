@@ -2,56 +2,8 @@
   text-align: center;
   display: inline-block;
   margin: 8px;
-  margin-top: 20px;
-}
-
-.roundsInfo {
-	text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width:240px;
-	display: inline-block;
-	vertical-align: top;
-}
-
-.selectInfo {
-	margin-top:28px;
-	transform:scale(1.2);
-}
-
-.roundItem {
-	padding: 2px 12px;
-    line-height: 20pt;
-    display:block;
-}
-
-.roundName {
-	display: block;
-}
-
-.roundRound {
-	font-weight: bold;
-	font-size:17pt;
-	margin-right: 12px;
-	display: block;
-	position: relative;
-	z-index:10;
-}
-
-.roundNumber {
-	color: #e6c960;
-    display: block;
-    font-size: 34pt;
-    line-height: 34pt;
-}
-
-.roundWinner {
-	font-size:18pt;
-	font-weight: bold;
-}
-
-.passwordInput {
-	width:250px;
+  margin-top: 2px;
+  width: 100%;
 }
 
 .gameLink {

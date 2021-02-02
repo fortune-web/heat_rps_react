@@ -1,36 +1,49 @@
 
 
 .gameInfo {
-	text-align: center;
-    background: rgb(255, 255, 255, 0.2);
-    border-radius: 4px;
+	text-align: left;
+	background: #223241;
+	border-radius: 0 0 8px 8px;
+	padding: 30px 30px;
+	width: 100%;
 }
 
 .listItem {
-	padding: 2px 12px;
-    line-height: 20pt;
-    display:inline-block;
-    vertical-align: top;
+	padding: 2px 30px;
+	line-height: 16pt;
+	display:inline-block;
+	width: 25%;
+	vertical-align: top;
 }
-
-.listItem:not(:last-child) {
-	border-right: 1px solid rgb(255, 255, 255, 0.1);
+.list_welcome {
+	width: 50%;
+	padding: 10px 30px;
 }
-
+.list_password {
+	width: 50%;
+	padding: 10px 30px;
+	text-align: right;
+}
 .listName {
-	font-weight: bold;
 	margin-right: 12px;
 	display: block;
 	position: relative;
-	width:180px;
 	z-index:10;
 }
 
 .listData {
-	line-height:18pt;
+	line-height:16pt;
+	color:grey;
 }
 
 .listDataPin {
 	display: block;
 	font-size: 8pt;
+	color: grey;
+}
+.list__reset {
+	transform: translateY(-50%);
+	width: 30%;
+	border-radius: 20px;
+	font-weight: bold;;
 }

@@ -1,4 +1,4 @@
-input[type=button] {
+/* input[type=button] {
     padding: 6px 10px;
     background-color: #e0a329;
     border: none;
@@ -10,7 +10,7 @@ input[type=button] {
 
 input[type=button]:hover {
   background-color: #9d6900;
-}
+} */
 
 .App {
   text-align: center;
@@ -55,3 +55,5 @@ input[type=button]:hover {
     transform: rotate(360deg);
   }
 }
+
+

@@ -2,15 +2,14 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import rock  from './images/set2/rock.png'
-import paper from './images/set2/paper.png'
-import scissor from './images/set2/scissor.png'
+import rock  from './images/set3/rock.png'
+import paper from './images/set3/paper.png'
+import scissor from './images/set3/scissor.png'
 import question from './images/set2/question.png'
 import './Element.css';
 
 
-const Element = ({ element, move, password, play, active }) => {
-
+const Element = ({ element, move, win, play, active }) => {
 
   let image
 
@@ -27,16 +26,17 @@ const Element = ({ element, move, password, play, active }) => {
   if (element === '?') image = question
 
   return (
-    <div className={active ? 'activeCard' : 'figure'}>
-      <img 
-        src={image} 
-        className={element==='?' ? 'gray' : element} 
-        alt={element.toUpperCase()} 
-        name={element.toUpperCase()} 
-        onClick={active ? ()=>play(element) : null}
-      />
-      <p>{ move ? move : null }</p>
-      <p>{ password ? password : null }</p>
+    <div className={active ? 'activeCard' : `figure figure_${win && element != '?' ? win : ''}`}>
+      { element != '?' &&
+        <img
+          src={image}
+          className='card_img'
+          alt={element.toUpperCase()}
+          name={element.toUpperCase()}
+          onClick={active ? ()=>play(element) : null}
+        />
+      }
+      { element === '?' && <h5>?</h5> }
     </div>
   );
 }
@@ -44,7 +44,7 @@ const Element = ({ element, move, password, play, active }) => {
 Element.propTypes = {
   element: PropTypes.string,
   move: PropTypes.string,
-  password: PropTypes.string,
+  win: PropTypes.string,
   play: PropTypes.func,
   active: PropTypes.bool,
 };

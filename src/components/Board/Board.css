@@ -1,76 +1,106 @@
 .Board {
   text-align: center;
   display: inline-block;
-  margin: 8px;
-  margin-top: 20px;
+	width: 100%;
+	margin: 2px 0;
 }
 
+.playerBoard {
+	background: #223241;
+	border-radius: 8px;
+	padding: 0px 30px 10px 30px;
+	text-align: center;
+	width: 60%;
+	margin: 30px auto;
+}
 
-.gameInfo {
+/* .gameInfo {
 	text-align: center;
     background: rgb(255, 255, 255, 0.2);
     border-radius: 4px;
-}
+} */
 
 .roundsInfo, .roundsInfoW, .roundsInfoL, .roundsInfoD {
 	text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width:240px;
+	margin: 5px;
+	border-radius: 8px;
 	display: inline-block;
 	vertical-align: top;
+	height: auto;
+	overflow: hidden;
+	background: url('../Element/images/set3/figure_background.png');
+	background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .roundsInfoW {
-	background-color: #3933;
-}
-
-.roundsInfoL {
-	background-color: #c003;
-}
-
-.roundsInfoD {
-	background-color: #db03;
+	border: 1px solid red;
 }
 
 .selectInfo {
-	margin-top:28px;
-	transform:scale(1.2);
+	margin: 30px;
+	transform:scale(1.0);
+	display: flex;
+	justify-content: center;
 }
 
 .roundItem {
-	padding: 2px 12px;
-    line-height: 20pt;
-    display:block;
+	transform: scale(1);
+	padding: 5px 30px;
 }
 
 .roundName {
 	display: block;
+	font-size: 12pt;
+	font-weight: bold;
 }
 
 .roundRound {
 	font-weight: bold;
 	font-size:17pt;
-	margin-right: 12px;
 	display: block;
 	position: relative;
 	z-index:10;
 }
 
 .roundNumber {
-	color: #e6c960;
-    display: block;
-    font-size: 34pt;
-    line-height: 34pt;
+	color: white;
+	background-color: #ff3d3d;
+	margin: auto;
+	font-size: 24px;
+	font-weight: bold;
+	width: 40px;
+	height: 40px;
+	display: block;
+	text-align: center;
+	border-radius: 50%;
+	transform: translateY(-50%);
 }
 
 .roundWinner {
-	font-size:18pt;
+	font-size: 12pt;
 	font-weight: bold;
+	padding: 10px 30px;
+	background-color: #131b23;
+}
+.roundWinner_win {
+	background-color: #ff3d3d;
 }
 
+.passwordInfo {
+	margin-bottom: 30px;
+}
 .passwordInput {
-	width:250px;
+	width: 240px;
+	height: 35px;
+	padding: 5px 20px;
+	margin-left: 40px;
+	font-size: 10pt;
+	background-color: #1c252e;
+	border: none;
+  border-radius: 4px;
+  color: white;
 }
 
 .gameLink {
@@ -81,32 +111,36 @@
     border: 5px #ccc;
     border-style: dotted;
     width: 300px;
-    margin: auto;
     background: #333;
-    margin-top: 12px;
+    margin: 30px auto;
     animation: blinker 2s linear infinite;
 }
-
 
 .finalBoardW {
 	background-color: #3933;
 }
 
- .finalBoardL {
-	background-color: #c003;
- }
+.finalBoardL {
+background-color: #c003;
+}
 
- .finalBoardD {
-	background-color: #db03;
- }
+.finalBoardD {
+background-color: #db03;
+}
+
+.roundInfo {
+	width: 100%;
+	background: #223241;
+	border-radius: 8px 8px 0 0;
+	margin-top: 20px;
+	padding: 30px;
+}
 
 @keyframes blinker {
   8% {
     opacity: 0;
   }
 }
-
-
 .name {
 	color:#c36;
 }

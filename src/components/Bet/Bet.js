@@ -7,42 +7,43 @@ import Row from 'react-bootstrap/Row';
 
 import './Bet.css';
 
-const Bet = ({ bet, enterGame, loadGame }) => {
+const Bet = ({ bet, enterGame, loadGame, selected }) => {
 
   const startGame = () => {
     enterGame(bet)
   }
-    
-  return (
-    <Row className="mr-1 mb-3 justify-content-center">
-      <Col xs="8" sm="4" md="4" lg="12" className="Bet">
-        <Row className="betid justify-content-center"># {bet.id}</Row>
-        <Row md="auto" className="category account justify-content-center">ACCOUNT</Row>
-        <Row className="justify-content-center">{bet.account_name1 || bet.account_id1 || '-'}</Row>
 
-        <Row className="category amount justify-content-center">AMOUNT</Row>
-        <Row className="justify-content-center">{bet.amount / 100000000} HEAT</Row>
-        
-        <Row className="category rounds justify-content-center">ROUNDS</Row>
-        <Row className="justify-content-center">{bet.rounds}</Row>
-        
-        <div>
-        {
-          (bet.status === 'FINISHED') &&
-            <input className="inputButton finished" type="button" onClick={() => loadGame(bet)} value="FINISHED" />
+  return (
+    <div className="bet__container">
+      <Row className="mb-3 justify-content-center"  className={selected ? 'bet bet__selected': 'bet'}>
+        <Col xs="12" sm="12" md="12" lg="12" className="h-100">
+          <Row className="bet_id"># {bet.id}</Row>
+          <Row md="auto" className="bet_item_title">ACCOUNT</Row>
+          <Row className="bet_item_value">{bet.account_name1 || bet.account_id1 || '-'}</Row>
+
+          <Row className="bet_item_title">AMOUNT</Row>
+          <Row className="bet_item_value">{bet.amount / 100000000} HEAT</Row>
+
+          <Row className="bet_item_title">ROUNDS</Row>
+          <Row className="bet_item_round">{bet.rounds}</Row>
+
+        </Col>
+      </Row>
+      <div className="">
+      {
+        (bet.status === 'FINISHED') &&
+          <input type="button" className="bet_item_submit" onClick={() => loadGame(bet)} value="FINISHED" />
+      }
+      {
+          (bet.status === 'FUNDED' || bet.status === 'CREATED') &&
+            <input type="button" className="bet_item_submit" onClick={() => startGame()} value="NEW GAME" />
+      }
+      {
+          (bet.status === 'STARTED') &&
+            <input type="button" className="bet_item_submit" onClick={() => loadGame(bet)} value="CONTINUE" />
         }
-        {
-            (bet.status === 'FUNDED' || bet.status === 'CREATED') &&
-              <input className="inputButton start" type="button" onClick={() => startGame()} value="START GAME" />
-        }
-        {
-            (bet.status === 'STARTED') &&
-              <input className="inputButton continue" type="button" onClick={() => loadGame(bet)} value="CONTINUE GAME" />
-          }
-          
-        </div>
-      </Col>
-    </Row>
+      </div>
+     </div>
   );
 }
 

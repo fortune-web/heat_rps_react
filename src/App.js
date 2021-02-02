@@ -1,5 +1,5 @@
-import React, { 
-  useState, 
+import React, {
+  useState,
 } from 'react';
 
 // heat Game Library
@@ -83,10 +83,10 @@ const App = () => {
     }))
 
     setStage(
-      (data.status === 'CREATED') ? stages.CREATED : 
-      (data.status === 'FINISHED') ? stages.FINISHED : 
+      (data.status === 'CREATED') ? stages.CREATED :
+      (data.status === 'FINISHED') ? stages.FINISHED :
       (data.status === 'STARTED') ? stages.STARTED :
-      (data.status === 'FUNDED') ? stages.FUNDED : 
+      (data.status === 'FUNDED') ? stages.FUNDED :
       stages.STARTED)
   }
 
@@ -115,7 +115,7 @@ const App = () => {
         rounds: data.rounds,
         status: 'LOGIN'
       })
-      setStage(stages.LOGIN) 
+      setStage(stages.LOGIN)
     }
 
   }
@@ -125,8 +125,8 @@ const App = () => {
       <div className="container">
 
       {
-        stage === stages.LOBBY && 
-        <Lobby 
+        stage === stages.LOBBY &&
+        <Lobby
           enterGame={enterGame}
           loadGame={loadGame}
           bets={bets}
@@ -138,8 +138,8 @@ const App = () => {
         />
       }
       {
-        (stage === stages.CREATED || stage === stages.FUNDED || stage === stages.LOGIN ) && 
-        <Payment 
+        (stage === stages.CREATED || stage === stages.FUNDED || stage === stages.LOGIN ) &&
+        <Payment
           enterGame={enterGame}
           account={account}
           setAccount={setAccount}
@@ -151,19 +151,19 @@ const App = () => {
           game={game}
           setPlayer={setPlayer}
         />
-      }       
+      }
       {
-        (stage === stages.STARTED || stage === stages.FINISHED) && 
-        <Board 
+        (stage === stages.STARTED || stage === stages.FINISHED) &&
+        <Board
           stage={stage}
-          setStage={setStage} 
+          setStage={setStage}
           game={game}
           setGame={setGame}
           moves={moves}
           setMoves={setMoves}
-          opponentMoves={opponentMoves} 
+          opponentMoves={opponentMoves}
           setOpponentMoves={setOpponentMoves}
-          account={account}  
+          account={account}
           setAccount={setAccount}
           player={player}
         />

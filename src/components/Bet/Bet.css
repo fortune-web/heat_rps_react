@@ -1,36 +1,39 @@
-.Bet {
-  text-align: center;
-  display: inline-block;
-  margin: 8px;
-  margin-bottom: 18px;
-
-  border: 1px solid #666;
-    border-radius: 5px;
-    padding: 8px 12px;
-    margin: 0 20px;
-    width: 100%;
-
-    text-align: center;
-    font-size: 10pt;
-    background: #222;
+.bet {
+	padding-bottom: 40px;
+	background-color: #223241;
+	border-radius: 20px;
+	width: 100%;
+	height: 100%;
+	font-size: 10pt;
+	margin: 0 !important;
+	overflow: hidden;
 }
-
-
-.category {
-	font-weight: bold;
-	margin-top: 8px;
-	font-size: 11pt;
-	background: #6a515466;
+.bet__container {
+	width: 100%;
+	height: 100%;
+	position: relative;
 }
-
-.category span {
-	color: #eee;
+.bet__selected {
+	border: solid 2px #ff3d3d;
 }
-
-.account {
-	color: #edc041;
+.bet_item_title {
+	color: white;
+	font-size: 12px;
+	margin: 10px 0 0 0;
+	cursor: pointer;
 }
-
+.bet_item_value {
+	color: grey;
+	font-size: 12px;
+	margin: 0 0;
+	cursor: pointer;
+}
+.bet_item_round {
+	color: white;
+	font-size: 24px;
+	margin: 0 0;
+	cursor: pointer;
+}
 .amount {
 	color: #da5c11;
 }
@@ -39,25 +42,23 @@
 	color:#628a2c;
 }
 
-.betid {
-	font-size: 19pt;
-	color:#eee;
-	line-height: 13pt;
+.bet_id {
+	font-size: 24pt;
+	color:white;
+	padding: 10px 20px;
+	background-color: #253a4f;
+	font-weight: bold;
+	height: 20%;
 }
-
-.category span {
-	display:block;
-	font-weight: normal;
-}
-
-.start {
-	background-color: #d1b171;
-}
-
-.continue {
-	background-color: #d1b171;
-}
-
-.finished {
-	background-color: #d1b171;
+.bet_item_submit {
+	transform: translateY(-50%);
+	border-radius: 20px;
+	width: 110px;
+	height: 40px;
+	color: white;
+	background-color: #ff3d3d;
+	padding: 8px auto;
+	margin: 0;
+	border: none;
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
 }
