@@ -49,15 +49,6 @@ const Payment = ({
     setPaying(false)
 
     const data = await resp.json()
-    // const data = {
-    //   account_id: "9550110832640187325",
-    //   account_name: "takeshi@heatwallet.com",
-    //   opponent_id: "6768971178720561498",
-    //   opponent_name: "fatimaflash@heatwallet.com",
-    //   password: "Mp1Dc8wLrid9nfk",
-    //   player: 2,
-    //   status: "OK"
-    // }
 
     if ( !data ) {
       alert("LISTENING CONNECTION ERROR")
@@ -168,7 +159,7 @@ const Payment = ({
           <h2>To make your bet, send {game.amount / 100000000} HEAT to the account:</h2>
           <div className="mainAccount">{mainAccount}</div>
           <h2>With the message:</h2>
-          <div className="mainAccount">{game.id}</div>
+          <div className="mainAccount">{game.message}</div>
           <h2>After that, press the button:</h2>
           {
           !isPaying &&

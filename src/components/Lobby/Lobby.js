@@ -9,12 +9,8 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Carousel from '@brainhubeu/react-carousel';
 import '@brainhubeu/react-carousel/lib/style.css';
-import LobbyData from './dummy_lobby';
 import { stages, API_URL } from '../../config.js';
 import './Lobby.css';
-import arrow_left from './image/arrow_left.png';
-import arrow_right from './image/arrow_right.png';
-
 
 const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
 
@@ -32,7 +28,13 @@ const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
         'Content-Type': 'application/json'
       }
     })
-    const data = await resp.json()
+    let data = await resp.json()
+    if(data.length < 5){
+      const d = 5 / data.length
+      let arr = []
+      for(let i = 0; i <= d; i++) arr = [...arr, ...data]
+      data = arr
+    }
     if (data) {
       setBets(data)
       console.log(data)
@@ -75,6 +77,7 @@ const Lobby = ({ enterGame, loadGame, bets, setStage, setBets, setGame }) => {
       setGame({
           id: data.game_id,
           pin: data.game_pin,
+          message: data.message,
           rounds: params.rounds,
           amount: params.amount,
           status: 'CREATED',

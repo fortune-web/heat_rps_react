@@ -31,6 +31,7 @@ const App = () => {
       setGame({
         id: game.id,
         amount: game.amount,
+        message: game.message,
         opponent_name: game.status === 'CREATED' ? 'WAITING' : game.account_name1 || game.account_id1,
         opponent_id: game.status === 'CREATED' ? '-' : game.account_id1,
         rounds: game.rounds,
@@ -66,6 +67,7 @@ const App = () => {
     setGame({
       id: data.id,
       pin: data.pin,
+      message: data.message,
       account_id: data.account_id,
       account_name: data.account_name,
       opponent_id: data.opponent_id,
